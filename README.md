@@ -11,7 +11,7 @@ Repositori ini berisi implementasi dasar pembuatan dokumen HTML, pengaturan web 
 
 Teknologi yang Digunakan
 - HTML5
-- Web Server**: Apache (via Laragon 5)
+- Web Server: Apache (via Laragon 5)
 - PHP: PHP 8.4
 - Version Control: Git & GitHub
 
