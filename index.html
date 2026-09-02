@@ -1,12 +1,87 @@
 <!doctype html>
 <html lang="id">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Praktikum Pemrograman Web</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Portal Layanan Informasi dan UMKM Wilayah Pesisir">
+  <title>Portal Layanan Pesisir - Pemrograman Web</title>
 </head>
+
 <body>
-    <h1>Praktikum Pemrograman Web</h1>
-    <p>Repository awal OBE.</p>
+
+  <header>
+    <a href="#main-content">Lewati ke konten utama</a>
+    <h1>Portal Komunitas Pesisir</h1>
+    <nav aria-label="Navigasi Utama">
+      <ul>
+        <li><a href="#profil">Profil Wilayah</a></li>
+        <li><a href="#layanan">Layanan & UMKM</a></li>
+        <li><a href="#kontak">Hubungi Kami</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main-content">
+
+    <section id="profil">
+      <h2>Profil Kawasan Pesisir</h2>
+      <p>Pusat informasi digital untuk memfasilitasi integrasi ekonomi dan layanan masyarakat di kawasan pesisir dan
+        perbatasan.</p>
+      <figure>
+        <img src="images/imagsdes.jpg" alt="Pemandangan dermaga aktivitas ekonomi masyarakat pesisir">
+        <figcaption>Aktivitas ekonomi sentra maritim lokal.</figcaption>
+      </figure>
+    </section>
+
+    <section id="layanan">
+      <h2>Informasi Layanan & Usaha</h2>
+
+      <article>
+        <h3>Program Digitalisasi Nelayan Tradisional</h3>
+        <p>Pendataan inventaris tangkapan laut secara berkala guna mendukung kestabilan harga pasar dan efisiensi
+          distribusi lokal.</p>
+      </article>
+
+      <article>
+        <h3>Pemberdayaan Produk Olahan Pesisir</h3>
+        <p>Fasilitasi pemasaran produk turunan hasil laut bagi kelompok usaha mikro melalui jaringan rantai pasok
+          digital.</p>
+      </article>
+    </section>
+
+    <section id="kontak">
+      <h2>Layanan Pengaduan & Kontak</h2>
+      <p>Silakan tinggalkan pesan atau pertanyaan Anda melalui formulir di bawah ini:</p>
+
+      <form action="#" method="post">
+        <div>
+          <label for="nama">Nama Lengkap:</label>
+          <input type="text" id="nama" name="nama" required>
+        </div>
+
+        <div>
+          <label for="email">Alamat Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div>
+          <label for="pesan">Pesan / Masukan:</label>
+          <textarea id="pesan" name="pesan" rows="4" required></textarea>
+        </div>
+
+        <div>
+          <button type="submit">Kirim Pesan</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Portal Komunitas Pesisir. Praktikum Pemrograman Web OBE.</p>
+  </footer>
+
 </body>
+
 </html>
