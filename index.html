@@ -7,14 +7,17 @@
   <meta name="description" content="TaskTrack - Web Tracker Tugas & Deadline Kuliah">
   <meta name="author" content="Muhammad Dzakir Dzakwan">
   <title>TaskTrack - Manajemen Tugas Kuliah</title>
+
+  <!-- Hubungkan Lembar Gaya styles.css -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
   <!-- Aksesibilitas: Skip link untuk navigasi keyboard -->
-  <a href="#main-content">Lewati ke konten utama</a>
+  <a href="#main-content" class="skip-link">Lewati ke konten utama</a>
 
-  <header>
+  <header class="container">
     <h1>TaskTrack</h1>
     <p>Visualisasi alur kerja dan pelacak tenggat waktu tugas kuliah</p>
     <nav aria-label="Navigasi Utama">
@@ -26,19 +29,19 @@
     </nav>
   </header>
 
-  <main id="main-content">
+  <main id="main-content" class="container">
 
     <!-- Section 1: Papan Kanban Utama -->
     <section id="kanban-board">
       <h2>Papan Kanban Tugas</h2>
       <p>Tarik dan lepas kartu tugas untuk memperbarui status pengerjaan.</p>
 
-      <div class="kanban-columns">
+      <div class="kanban-columns cards">
         <!-- Kolom 1 -->
-        <article class="column-todo">
+        <article class="column-todo card">
           <h3>To Do</h3>
           <p>Tugas yang belum dikerjakan, diurutkan berdasarkan deadline terdekat.</p>
-          <div class="task-card" tabindex="0">
+          <div class="task-card card" tabindex="0">
             <h4>Analisis Sistem Jaringan</h4>
             <p>Mata Kuliah: Jaringan Komputer</p>
             <p>Deadline: 10 Sep 2026, 23:59</p>
@@ -47,13 +50,13 @@
         </article>
 
         <!-- Kolom 2 -->
-        <article class="column-inprogress">
+        <article class="column-inprogress card">
           <h3>In Progress</h3>
           <p>Tugas yang sedang dalam tahap pengerjaan.</p>
         </article>
 
         <!-- Kolom 3 -->
-        <article class="column-done">
+        <article class="column-done card">
           <h3>Done</h3>
           <p>Tugas yang telah selesai dan siap dikumpulkan.</p>
         </article>
@@ -94,7 +97,7 @@
         <h3>Izin Web Push Notification</h3>
         <p>Aktifkan notifikasi perangkat agar sistem dapat mengirimkan pengingat proaktif sebelum waktu habis.</p>
         <figure>
-          <img src="ilustrasi-notif.png"
+          <img src="images/ilustrasi-notif.png"
             alt="Ilustrasi layar browser yang memunculkan pop-up izin notifikasi (Opt-in) di pojok kiri atas">
           <figcaption>Contoh prompt izin notifikasi browser.</figcaption>
         </figure>
@@ -110,7 +113,7 @@
 
   </main>
 
-  <footer>
+  <footer class="container">
     <p>&copy; 2026 Teknik Komputer Universitas Borneo Tarakan.</p>
   </footer>
 
