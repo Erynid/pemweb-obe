@@ -11,17 +11,24 @@ Portal Komunitas Pesisir adalah web page statis yang dirancang sebagai pusat inf
 
 ## Teknologi yang Digunakan
 - **HTML5** (Struktur Semantik & Aksesibilitas)
+- **CSS3** (Custom Properties, Flexbox, CSS Grid, Responsive Design)
 - **Web Server**: Apache (via Laragon 5)
 - **PHP**: PHP 8.4
 - **Version Control**: Git & GitHub
 
 ## Fitur yang Sudah Selesai
 - [x] **Struktur HTML5 Semantik**: Penggunaan tag semantik modern (`header`, `nav`, `main`, `section`, `article`, `figure`, `footer`).
-- [x] **Fitur Aksesibilitas Web**: Penerapan skip link (`#main-content`), atribut `aria-label`, atribut `alt` deskriptif pada gambar, serta label formulir yang terhubung dengan ID elemen.
+- [x] **Fitur Aksesibilitas Web**: Penerapan skip link (`#main-content`), atribut `aria-label`, atribut `alt` deskriptif pada gambar, label formulir terhubung dengan ID, serta focus state (`:focus-visible`) yang jelas dan tidak hilang.
+- [x] **Desain Responsif & Tata Letak CSS Modern**:
+  - CSS Reset ringan dan `box-sizing: border-box`.
+  - CSS Custom Properties (`:root`) untuk manajemen palet warna, spacing scale, dan border radius.
+  - Layout navigasi dinamis berbasis **Flexbox**.
+  - Layout kartu layanan & UMKM berbasis **CSS Grid**.
+  - Media queries berbasis kebutuhan konten (*content-driven breakpoints*).
 - [x] **Profil Kawasan Pesisir**: Penyajian informasi integrasi ekonomi masyarakat kawasan pesisir.
 - [x] **Integrasi Media Visual**: Penggunaan elemen `<figure>` dan `<figcaption>` untuk menampilkan aset gambar lokal (`images/imagsdes.jpg`).
-- [x] **Informasi Layanan & UMKM**: Artikel digitalisasi nelayan tradisional dan pemberdayaan produk olahan pesisir.
-- [x] **Formulir Kontak & Pengaduan**: Input formulir nama, email, pesan, dan tombol kirim dengan validasi HTML `required`.
+- [x] **Informasi Layanan & UMKM**: Artikel digitalisasi nelayan tradisional dan pemberdayaan produk olahan pesisir dalam format card grid.
+- [x] **Formulir Kontak & Pengaduan**: Input formulir nama, email, pesan, dan tombol kirim dengan validasi HTML `required` dan penataan form grid yang responsif.
 - [x] **Log Penggunaan AI**: Dokumentasi riwayat penggunaan AI dan verifikasi mandiri pada `AI_USAGE_LOG.md`.
 
 ## Cara Menjalankan Melalui Laragon 5
