@@ -1,53 +1,95 @@
 /**
- * Main Application Script
- * Mengimpor fungsi dari utils.js dan mendemonstrasikan pengolahan data array of objects.
+ * Main Application Module
+ * Praktikum Pemrograman Web OBE
  */
 
-import {
-  ringkasInventaris,
-  filterAlatByKondisi,
-  ambilDaftarNama,
-  hitungTotalUnit
-} from './utils.js';
+// 8. Import fungsi modular dari js/utils.js
+import { ringkasInventaris, filterAlatByLokasi, cariAlatById, formatRingkasanAlat } from "./utils.js";
 
-// 1. Array Objek Inventaris (Alat Pemantauan & Operasional Maritim/Pesisir)
+// Dataset Inventaris Alat & Fasilitas Pesisir (dengan properti lokasi)
 const inventaris = [
-  { id: 1, nama: 'GPS Garmin Maritim', kategori: 'Navigasi', jumlah: 5, kondisi: 'Baik' },
-  { id: 2, nama: 'Fish Finder Sonar', kategori: 'Navigasi', jumlah: 3, kondisi: 'Baik' },
-  { id: 3, nama: 'Radio Komunikasi VHF', kategori: 'Komunikasi', jumlah: 8, kondisi: 'Perlu Cek' },
-  { id: 4, nama: 'Life Jacket Standar SOLAS', kategori: 'Keselamatan', jumlah: 25, kondisi: 'Baik' },
-  { id: 5, nama: 'Termometer Digital Suhu Air', kategori: 'Instrumen', jumlah: 4, kondisi: 'Perlu Cek' },
-  { id: 6, nama: 'Refraktometer Salinitas', kategori: 'Instrumen', jumlah: 6, kondisi: 'Baik' }
+    {
+        id: 1,
+        nama: "Jaring Insang (Gillnet)",
+        kategori: "Alat Tangkap",
+        jumlah: 15,
+        kondisi: "Baik",
+        lokasi: "Dermaga Barat",
+    },
+    {
+        id: 2,
+        nama: "GPS Navigasi Laut",
+        kategori: "Navigasi",
+        jumlah: 5,
+        kondisi: "Baik",
+        lokasi: "Pos Pengawas",
+    },
+    {
+        id: 3,
+        nama: "Mesin Tempel 15 PK",
+        kategori: "Mesin Kapal",
+        jumlah: 3,
+        kondisi: "Perlu Servis",
+        lokasi: "Bengkel Sentral",
+    },
+    {
+        id: 4,
+        nama: "Coolbox Penyimpanan Ikan 200L",
+        kategori: "Penyimpanan",
+        jumlah: 20,
+        kondisi: "Baik",
+        lokasi: "Dermaga Barat",
+    },
+    {
+        id: 5,
+        nama: "Rompi Pelampung (Life Jacket)",
+        kategori: "Keselamatan",
+        jumlah: 30,
+        kondisi: "Baik",
+        lokasi: "Dermaga Timur",
+    },
+    {
+        id: 6,
+        nama: "Fishfinder Sonar",
+        kategori: "Navigasi",
+        jumlah: 2,
+        kondisi: "Rusak",
+        lokasi: "Pos Pengawas",
+    },
 ];
 
-// 2. Pengolahan Data Menggunakan Array Methods
-// A. Filter alat dengan kondisi 'Baik'
-const alatBaik = inventaris.filter(item => item.kondisi === 'Baik');
+console.log("Portal Layanan Pesisir: Data inventaris berhasil dimuat.", inventaris);
 
-// B. Map untuk mengambil nama alat
-const namaAlat = inventaris.map(({ nama }) => nama);
+// 3. Filter alat dengan kondisi "Baik"
+const alatKondisiBaik = inventaris.filter((item) => item.kondisi === "Baik");
 
-// C. Reduce untuk menghitung total unit
-const totalUnit = inventaris.reduce((total, item) => total + item.jumlah, 0);
+console.log("Daftar Alat dengan Kondisi Baik:", alatKondisiBaik);
 
-// D. Ringkasan statistik menggunakan fungsi modular dari utils.js
+// 4. Map untuk menghasilkan array nama alat
+const daftarNamaAlat = inventaris.map((item) => item.nama);
+
+console.log("Daftar Nama Alat:", daftarNamaAlat);
+
+// 5. Reduce untuk menghitung total jumlah alat
+const totalJumlahAlat = inventaris.reduce((total, item) => total + item.jumlah, 0);
+
+console.log(`Total Jumlah Seluruh Alat Inventaris: ${totalJumlahAlat} unit`);
+
+// 8. Memanggil fungsi ringkasInventaris yang diimpor dari utils.js
 const statistikInventaris = ringkasInventaris(inventaris);
+console.log("Ringkasan Statistik Inventaris (via utils.js):", statistikInventaris);
 
-// 3. Menampilkan Hasil Pengolahan Data ke Developer Console
-console.group('=== 📊 PENGOLAHAN DATA INVENTARIS (ES MODULE) ===');
+// Filter alat pada lokasi tertentu (misal: "Dermaga Barat")
+const lokasiTarget = "Dermaga Barat";
+const alatDiDermagaBarat = filterAlatByLokasi(inventaris, lokasiTarget);
+console.log(`Daftar Alat di lokasi '${lokasiTarget}':`, alatDiDermagaBarat);
 
-console.log('📌 Dataset Inventaris Lengkap:');
-console.table(inventaris);
+// Pencarian Alat Berdasarkan ID menggunakan find
+const idTarget = 3;
+const alatDitemukan = cariAlatById(inventaris, idTarget);
+console.log(`Pencarian Alat dengan ID ${idTarget}:`, alatDitemukan);
 
-console.log('✅ 1. Alat dengan Kondisi "Baik" (filter):');
-console.table(alatBaik);
-
-console.log('📝 2. Daftar Nama Alat (map):');
-console.log(namaAlat);
-
-console.log(`🔢 3. Total Jumlah Unit (reduce): ${totalUnit} unit`);
-
-console.log('📈 4. Ringkasan Statistik Inventaris (ringkasInventaris):');
-console.log(statistikInventaris);
-
-console.groupEnd();
+// Destructuring & Template Literal: Ringkasan setiap alat
+console.log("\n--- Ringkasan Format Teks Setiap Alat ---");
+const daftarRingkasanTeks = inventaris.map(formatRingkasanAlat);
+daftarRingkasanTeks.forEach((ringkasan) => console.log(ringkasan));

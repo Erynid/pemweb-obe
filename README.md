@@ -36,6 +36,14 @@
 - [x] **Informasi Layanan & UMKM**: Artikel digitalisasi nelayan tradisional dan pemberdayaan produk olahan pesisir dalam format card grid.
 - [x] **Formulir Kontak & Pengaduan**: Input formulir nama, email, pesan, dan tombol kirim dengan validasi HTML `required` dan penataan form grid yang responsif.
 - [x] **Log Penggunaan AI**: Dokumentasi riwayat penggunaan AI dan verifikasi mandiri pada `AI_USAGE_LOG.md`.
+- [x] **Pengolahan Data Inventaris (JavaScript ES Module)**:
+  - Dataset array of objects dengan properti lengkap (`id`, `nama`, `kategori`, `jumlah`, `kondisi`, `lokasi`).
+  - Pemfilteran data berdasarkan kondisi dan lokasi spesifik menggunakan method `filter`.
+  - Pencarian item spesifik berdasarkan ID menggunakan method `find`.
+  - Pengambilan daftar nama alat dengan `map` dan perhitungan akumulasi unit dengan `reduce`.
+  - Perhitungan statistik ringkasan inventaris secara modular pada `js/utils.js`.
+  - Pemanfaatan *object destructuring* dan *template literals* untuk menyusun string ringkasan data alat secara dinamis.
+
 
 ## Fitur yang Sudah Selesai
 - [x] **Struktur HTML5 Semantik**: Penggunaan elemen semantik terstruktur dan valid.

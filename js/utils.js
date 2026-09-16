@@ -1,59 +1,59 @@
 /**
- * Modul Utility Pengolahan Data Inventaris
- * Menyediakan fungsi-fungsi modular untuk manipulasi data inventaris (ES Module).
+ * Utility Functions Module
+ * Praktikum Pemrograman Web OBE
  */
 
 /**
- * Menghitung ringkasan statistik dari dataset inventaris.
- * @param {Array<Object>} data - Array objek inventaris.
- * @returns {{ jenisAlat: number, totalUnit: number, perluCek: number }} Objek ringkasan statistik.
- * @throws {TypeError} Jika parameter data bukan merupakan array.
+ * Meringkas data inventaris menjadi objek statistik
+ * @param {Array<Object>} data - Array data inventaris
+ * @returns {Object} Objek ringkasan statistik
  */
 export function ringkasInventaris(data) {
-  if (!Array.isArray(data)) {
-    throw new TypeError('Data harus berupa array');
-  }
+    const totalJenisAlat = data.length;
+    const totalUnit = data.reduce((acc, item) => acc + item.jumlah, 0);
+    const totalKondisiBaik = data.filter((item) => item.kondisi === "Baik").length;
+    const totalKondisiPerluServis = data.filter((item) => item.kondisi === "Perlu Servis").length;
+    const totalKondisiRusak = data.filter((item) => item.kondisi === "Rusak").length;
+    const daftarKategori = [...new Set(data.map((item) => item.kategori))];
 
-  return {
-    jenisAlat: data.length,
-    totalUnit: data.reduce((sum, item) => sum + (Number(item.jumlah) || 0), 0),
-    perluCek: data.filter(item => item.kondisi !== 'Baik').length
-  };
+    return {
+        totalJenisAlat,
+        totalUnit,
+        kondisi: {
+            baik: totalKondisiBaik,
+            perluServis: totalKondisiPerluServis,
+            rusak: totalKondisiRusak,
+        },
+        daftarKategori,
+    };
 }
 
 /**
- * Mengambil daftar item inventaris berdasarkan kondisi tertentu.
- * @param {Array<Object>} data - Array objek inventaris.
- * @param {string} kondisi - Kondisi yang dicari (default: 'Baik').
- * @returns {Array<Object>} Array item yang cocok dengan kondisi.
+ * Memfilter alat berdasarkan lokasi penyimpanan/operasional tertentu
+ * @param {Array<Object>} data - Array data inventaris
+ * @param {string} lokasi - Nama lokasi yang dicari
+ * @returns {Array<Object>} Array alat pada lokasi yang dipilih
  */
-export function filterAlatByKondisi(data, kondisi = 'Baik') {
-  if (!Array.isArray(data)) {
-    throw new TypeError('Data harus berupa array');
-  }
-  return data.filter(item => item.kondisi === kondisi);
+export function filterAlatByLokasi(data, lokasi) {
+    return data.filter((item) => item.lokasi.toLowerCase() === lokasi.toLowerCase());
 }
 
 /**
- * Mengekstrak seluruh nama alat dari dataset inventaris.
- * @param {Array<Object>} data - Array objek inventaris.
- * @returns {Array<string>} Array berisi daftar nama alat.
+ * Mencari satu alat berdasarkan ID menggunakan find
+ * @param {Array<Object>} data - Array data inventaris
+ * @param {number} id - ID alat yang dicari
+ * @returns {Object|undefined} Objek alat yang ditemukan atau undefined jika tidak ada
  */
-export function ambilDaftarNama(data) {
-  if (!Array.isArray(data)) {
-    throw new TypeError('Data harus berupa array');
-  }
-  return data.map(({ nama }) => nama);
+export function cariAlatById(data, id) {
+    return data.find((item) => item.id === Number(id));
 }
 
 /**
- * Menghitung total kuantitas unit alat dari dataset inventaris.
- * @param {Array<Object>} data - Array objek inventaris.
- * @returns {number} Jumlah total seluruh unit alat.
+ * Memformat informasi alat menjadi string ringkasan dengan destructuring dan template literal
+ * @param {Object} alat - Objek alat inventaris
+ * @returns {string} String ringkasan informasi alat
  */
-export function hitungTotalUnit(data) {
-  if (!Array.isArray(data)) {
-    throw new TypeError('Data harus berupa array');
-  }
-  return data.reduce((total, item) => total + (Number(item.jumlah) || 0), 0);
+export function formatRingkasanAlat(alat) {
+    const { id, nama, kategori, jumlah, kondisi, lokasi } = alat;
+    return `[#${id}] ${nama} (${kategori}) | Jumlah: ${jumlah} unit | Kondisi: ${kondisi} | Lokasi: ${lokasi}`;
 }
