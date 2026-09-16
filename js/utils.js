@@ -37,3 +37,23 @@ export function ringkasInventaris(data) {
 export function filterAlatByLokasi(data, lokasi) {
     return data.filter((item) => item.lokasi.toLowerCase() === lokasi.toLowerCase());
 }
+
+/**
+ * Mencari satu alat berdasarkan ID menggunakan find
+ * @param {Array<Object>} data - Array data inventaris
+ * @param {number} id - ID alat yang dicari
+ * @returns {Object|undefined} Objek alat yang ditemukan atau undefined jika tidak ada
+ */
+export function cariAlatById(data, id) {
+    return data.find((item) => item.id === Number(id));
+}
+
+/**
+ * Memformat informasi alat menjadi string ringkasan dengan destructuring dan template literal
+ * @param {Object} alat - Objek alat inventaris
+ * @returns {string} String ringkasan informasi alat
+ */
+export function formatRingkasanAlat(alat) {
+    const { id, nama, kategori, jumlah, kondisi, lokasi } = alat;
+    return `[#${id}] ${nama} (${kategori}) | Jumlah: ${jumlah} unit | Kondisi: ${kondisi} | Lokasi: ${lokasi}`;
+}

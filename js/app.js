@@ -4,7 +4,7 @@
  */
 
 // 8. Import fungsi modular dari js/utils.js
-import { ringkasInventaris, filterAlatByLokasi } from "./utils.js";
+import { ringkasInventaris, filterAlatByLokasi, cariAlatById, formatRingkasanAlat } from "./utils.js";
 
 // Dataset Inventaris Alat & Fasilitas Pesisir (dengan properti lokasi)
 const inventaris = [
@@ -79,7 +79,17 @@ console.log(`Total Jumlah Seluruh Alat Inventaris: ${totalJumlahAlat} unit`);
 const statistikInventaris = ringkasInventaris(inventaris);
 console.log("Ringkasan Statistik Inventaris (via utils.js):", statistikInventaris);
 
-// Tambahan: Filter alat pada lokasi tertentu (misal: "Dermaga Barat")
+// Filter alat pada lokasi tertentu (misal: "Dermaga Barat")
 const lokasiTarget = "Dermaga Barat";
 const alatDiDermagaBarat = filterAlatByLokasi(inventaris, lokasiTarget);
 console.log(`Daftar Alat di lokasi '${lokasiTarget}':`, alatDiDermagaBarat);
+
+// Pencarian Alat Berdasarkan ID menggunakan find
+const idTarget = 3;
+const alatDitemukan = cariAlatById(inventaris, idTarget);
+console.log(`Pencarian Alat dengan ID ${idTarget}:`, alatDitemukan);
+
+// Destructuring & Template Literal: Ringkasan setiap alat
+console.log("\n--- Ringkasan Format Teks Setiap Alat ---");
+const daftarRingkasanTeks = inventaris.map(formatRingkasanAlat);
+daftarRingkasanTeks.forEach((ringkasan) => console.log(ringkasan));
