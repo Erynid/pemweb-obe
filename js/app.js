@@ -3,6 +3,9 @@
  * Praktikum Pemrograman Web OBE
  */
 
+// 8. Import fungsi ringkasInventaris dari modul js/utils.js
+import { ringkasInventaris } from "./utils.js";
+
 // Dataset Inventaris Alat & Fasilitas Pesisir
 const inventaris = [
     {
@@ -66,26 +69,6 @@ const totalJumlahAlat = inventaris.reduce((total, item) => total + item.jumlah, 
 
 console.log(`Total Jumlah Seluruh Alat Inventaris: ${totalJumlahAlat} unit`);
 
-// 6. Fungsi ringkasInventaris(data) yang mengembalikan object statistik
-function ringkasInventaris(data) {
-    const totalJenisAlat = data.length;
-    const totalUnit = data.reduce((acc, item) => acc + item.jumlah, 0);
-    const totalKondisiBaik = data.filter((item) => item.kondisi === "Baik").length;
-    const totalKondisiPerluServis = data.filter((item) => item.kondisi === "Perlu Servis").length;
-    const totalKondisiRusak = data.filter((item) => item.kondisi === "Rusak").length;
-    const daftarKategori = [...new Set(data.map((item) => item.kategori))];
-
-    return {
-        totalJenisAlat,
-        totalUnit,
-        kondisi: {
-            baik: totalKondisiBaik,
-            perluServis: totalKondisiPerluServis,
-            rusak: totalKondisiRusak,
-        },
-        daftarKategori,
-    };
-}
-
+// 8. Memanggil fungsi ringkasInventaris yang diimpor dari utils.js
 const statistikInventaris = ringkasInventaris(inventaris);
-console.log("Ringkasan Statistik Inventaris:", statistikInventaris);
+console.log("Ringkasan Statistik Inventaris (via utils.js):", statistikInventaris);
