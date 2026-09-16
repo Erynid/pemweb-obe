@@ -57,3 +57,51 @@ export function hitungTotalUnit(data) {
   }
   return data.reduce((total, item) => total + (Number(item.jumlah) || 0), 0);
 }
+
+/**
+ * Mengambil daftar item inventaris pada lokasi tertentu menggunakan filter.
+ * @param {Array<Object>} data - Array objek inventaris.
+ * @param {string} lokasi - Nama lokasi yang dicari.
+ * @returns {Array<Object>} Array item yang berada pada lokasi tersebut.
+ */
+export function filterAlatByLokasi(data, lokasi) {
+  if (!Array.isArray(data)) {
+    throw new TypeError('Data harus berupa array');
+  }
+  return data.filter(item => item.lokasi === lokasi);
+}
+
+/**
+ * Mencari item inventaris berdasarkan id menggunakan method find.
+ * @param {Array<Object>} data - Array objek inventaris.
+ * @param {number|string} id - ID alat yang dicari.
+ * @returns {Object|undefined} Objek alat jika ditemukan, atau undefined jika tidak ditemukan.
+ */
+export function cariAlatById(data, id) {
+  if (!Array.isArray(data)) {
+    throw new TypeError('Data harus berupa array');
+  }
+  return data.find(item => item.id === Number(id));
+}
+
+/**
+ * Menghasilkan string ringkasan alat menggunakan destructuring dan template literal.
+ * @param {Object} alat - Objek inventaris alat.
+ * @returns {string} String ringkasan informasi alat.
+ */
+export function formatRingkasanAlat({ id, nama, kategori, jumlah, kondisi, lokasi } = {}) {
+  return `[ID: ${id}] ${nama} (${kategori}) | Jumlah: ${jumlah} unit | Kondisi: ${kondisi} | Lokasi: ${lokasi}`;
+}
+
+/**
+ * Menghasilkan kumpulan string ringkasan untuk setiap alat dalam dataset inventaris.
+ * @param {Array<Object>} data - Array objek inventaris.
+ * @returns {Array<string>} Array berisi string ringkasan seluruh alat.
+ */
+export function buatDaftarRingkasan(data) {
+  if (!Array.isArray(data)) {
+    throw new TypeError('Data harus berupa array');
+  }
+  return data.map(item => formatRingkasanAlat(item));
+}
+
