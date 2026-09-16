@@ -3,10 +3,10 @@
  * Praktikum Pemrograman Web OBE
  */
 
-// 8. Import fungsi ringkasInventaris dari modul js/utils.js
-import { ringkasInventaris } from "./utils.js";
+// 8. Import fungsi modular dari js/utils.js
+import { ringkasInventaris, filterAlatByLokasi } from "./utils.js";
 
-// Dataset Inventaris Alat & Fasilitas Pesisir
+// Dataset Inventaris Alat & Fasilitas Pesisir (dengan properti lokasi)
 const inventaris = [
     {
         id: 1,
@@ -14,6 +14,7 @@ const inventaris = [
         kategori: "Alat Tangkap",
         jumlah: 15,
         kondisi: "Baik",
+        lokasi: "Dermaga Barat",
     },
     {
         id: 2,
@@ -21,6 +22,7 @@ const inventaris = [
         kategori: "Navigasi",
         jumlah: 5,
         kondisi: "Baik",
+        lokasi: "Pos Pengawas",
     },
     {
         id: 3,
@@ -28,6 +30,7 @@ const inventaris = [
         kategori: "Mesin Kapal",
         jumlah: 3,
         kondisi: "Perlu Servis",
+        lokasi: "Bengkel Sentral",
     },
     {
         id: 4,
@@ -35,6 +38,7 @@ const inventaris = [
         kategori: "Penyimpanan",
         jumlah: 20,
         kondisi: "Baik",
+        lokasi: "Dermaga Barat",
     },
     {
         id: 5,
@@ -42,6 +46,7 @@ const inventaris = [
         kategori: "Keselamatan",
         jumlah: 30,
         kondisi: "Baik",
+        lokasi: "Dermaga Timur",
     },
     {
         id: 6,
@@ -49,6 +54,7 @@ const inventaris = [
         kategori: "Navigasi",
         jumlah: 2,
         kondisi: "Rusak",
+        lokasi: "Pos Pengawas",
     },
 ];
 
@@ -72,3 +78,8 @@ console.log(`Total Jumlah Seluruh Alat Inventaris: ${totalJumlahAlat} unit`);
 // 8. Memanggil fungsi ringkasInventaris yang diimpor dari utils.js
 const statistikInventaris = ringkasInventaris(inventaris);
 console.log("Ringkasan Statistik Inventaris (via utils.js):", statistikInventaris);
+
+// Tambahan: Filter alat pada lokasi tertentu (misal: "Dermaga Barat")
+const lokasiTarget = "Dermaga Barat";
+const alatDiDermagaBarat = filterAlatByLokasi(inventaris, lokasiTarget);
+console.log(`Daftar Alat di lokasi '${lokasiTarget}':`, alatDiDermagaBarat);

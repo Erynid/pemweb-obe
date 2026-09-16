@@ -27,3 +27,13 @@ export function ringkasInventaris(data) {
         daftarKategori,
     };
 }
+
+/**
+ * Memfilter alat berdasarkan lokasi penyimpanan/operasional tertentu
+ * @param {Array<Object>} data - Array data inventaris
+ * @param {string} lokasi - Nama lokasi yang dicari
+ * @returns {Array<Object>} Array alat pada lokasi yang dipilih
+ */
+export function filterAlatByLokasi(data, lokasi) {
+    return data.filter((item) => item.lokasi.toLowerCase() === lokasi.toLowerCase());
+}
