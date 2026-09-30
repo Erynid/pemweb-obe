@@ -393,7 +393,440 @@ section>p {
 }
 
 /* ==========================================================================
-   8. Form & Kontak Layout
+   8. Inventaris & Pencarian Real-Time
+   ========================================================================== */
+.inventaris-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+@media (min-width: 42.5rem) {
+  .inventaris-controls {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.inventaris-controls .search-container {
+  margin-bottom: 0;
+  flex: 1;
+  max-width: 28rem;
+}
+
+.search-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  max-width: 32rem;
+}
+
+.search-container label,
+.limit-container label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+}
+
+.search-container input[type="search"] {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  padding-left: 2.5rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-main);
+  font-size: 0.95rem;
+  transition: all var(--transition-fast);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' fill='%2364748b' viewBox='0 0 24 24'%3E%3Cpath d='M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 0.75rem center;
+}
+
+.search-container input[type="search"]:hover {
+  border-color: var(--color-border-hover);
+}
+
+.search-container input[type="search"]:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-focus-ring);
+  outline: none;
+}
+
+/* Kontrol Limit Jumlah Item (Latihan Praktikum 3) */
+.limit-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 9.5rem;
+}
+
+.limit-container select {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-main);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.limit-container select:hover {
+  border-color: var(--color-border-hover);
+}
+
+.limit-container select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-focus-ring);
+  outline: none;
+}
+
+/* Grid Inventaris */
+.inventaris-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
+}
+
+/* Kartu Inventaris */
+.inventaris-card {
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+  position: relative;
+}
+
+.inventaris-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-primary-light);
+}
+
+.inventaris-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+/* Badges Kategori & Status */
+.badge-kategori {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+}
+
+.badge-kondisi {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.badge-kondisi::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.badge-kondisi-baik {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.badge-kondisi-baik::before {
+  background-color: #16a34a;
+}
+
+.badge-kondisi-servis {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.badge-kondisi-servis::before {
+  background-color: #d97706;
+}
+
+.badge-kondisi-rusak {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge-kondisi-rusak::before {
+  background-color: #dc2626;
+}
+
+.inventaris-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+  line-height: 1.35;
+}
+
+.inventaris-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+  margin-top: auto;
+  padding-top: var(--spacing-xs);
+  border-top: 1px dashed var(--color-border);
+  font-size: 0.9rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-label {
+  color: var(--color-text-light);
+}
+
+.detail-value {
+  color: var(--color-text-main);
+}
+
+/* Tombol Detail (Latihan Praktikum 2) */
+.btn-detail {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-md);
+  background-color: var(--color-bg-page);
+  color: var(--color-primary-dark);
+  border: 1.5px solid var(--color-primary-light);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.btn-detail:hover {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-detail:active {
+  transform: translateY(0);
+}
+
+/* Dialog / Modal Rincian Alat */
+.detail-dialog {
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0;
+  margin: auto;
+  max-width: 32rem;
+  width: 90%;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-main);
+  animation: modalScaleIn 0.2s ease-out forwards;
+}
+
+.detail-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin: 0;
+}
+
+.btn-modal-close {
+  background: transparent;
+  border: none;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--spacing-2xs) var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.btn-modal-close:hover {
+  color: var(--color-text-main);
+  background-color: var(--color-bg-muted);
+}
+
+.modal-body {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.modal-detail-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-xs);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.modal-detail-hero h4 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+  line-height: 1.3;
+}
+
+.modal-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.modal-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.modal-detail-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.modal-label {
+  font-size: 0.78rem;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.modal-value {
+  font-size: 0.95rem;
+  color: var(--color-text-main);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg-muted);
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+.btn-modal-secondary {
+  padding: var(--spacing-xs) var(--spacing-lg);
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-modal-secondary:hover {
+  background-color: var(--color-border);
+  color: var(--color-text-main);
+}
+
+/* Pesan Ramah (Empty State) */
+.pesan-kosong {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  background-color: var(--color-bg-muted);
+  border: 1.5px dashed var(--color-border-hover);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.pesan-kosong-ikon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.pesan-kosong h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-main);
+}
+
+.pesan-kosong p {
+  font-size: 0.95rem;
+  max-width: 36rem;
+  margin: 0;
+}
+
+.pesan-kosong-saran {
+  font-size: 0.85rem !important;
+  color: var(--color-text-light);
+  margin-top: var(--spacing-xs) !important;
+}
+
+/* ==========================================================================
+   9. Form & Kontak Layout
    ========================================================================== */
 #kontak form {
   display: grid;
@@ -497,7 +930,8 @@ footer {
 
 /* Breakpoint Konten 2: Saat kartu layanan & UMKM optimal ditampilkan dalam 2 kolom (~680px / 42.5rem) */
 @media (min-width: 42.5rem) {
-  #layanan {
+  #layanan,
+  .inventaris-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -535,5 +969,9 @@ footer {
 
   section h2 {
     font-size: 1.75rem;
+  }
+
+  .inventaris-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

@@ -43,6 +43,23 @@
   - Pengambilan daftar nama alat dengan `map` dan perhitungan akumulasi unit dengan `reduce`.
   - Perhitungan statistik ringkasan inventaris secara modular pada `js/utils.js`.
   - Pemanfaatan *object destructuring* dan *template literals* untuk menyusun string ringkasan data alat secara dinamis.
+- [x] **Pencarian Real-Time Data Inventaris (Latihan Praktikum 1)**:
+  - Input field pencarian `#search` terhubung dengan event listener `input` untuk respon seketika tanpa perlu reload.
+  - Pemfilteran dinamis bersifat *case-insensitive* (mendukung huruf besar dan kecil) menggunakan method `filter` dan `includes`.
+  - Komponen kartu inventaris dinamis (`renderItems`) dilengkapi badge kategori dan indikator status kondisi alat.
+  - Penanganan *empty state* dengan pesan informatif dan ramah ketika hasil pencarian tidak ditemukan.
+- [x] **Tombol Detail dengan Event Delegation (Latihan Praktikum 2)**:
+  - Tombol aksi `Detail` pada setiap kartu inventaris dengan atribut dataset `data-detail="${item.id}"`.
+  - Penerapan pola arsitektur **Event Delegation** pada kontainer induk `#inventaris-list` memanfaatkan `event.target.closest('[data-detail]')` demi efisiensi memori dan keandalan elemen dinamis.
+  - Dialog modal semantik HTML5 `<dialog id="detail-modal">` dengan backdrop blur, penutupan via tombol dan klik backdrop, serta pencegahan scrolling latar.
+  - Penyajian rincian atribut alat secara lengkap (ID Registrasi, Kategori, Stok Tersedia, Lokasi Sentra, dan Catatan Operasional).
+- [x] **Simpan Preferensi Jumlah Item (Latihan Praktikum 3)**:
+  - Dropdown interaktif `<select id="limit">` dengan opsi 5, 10, dan 20 item per halaman.
+  - Penyimpanan preferensi pengguna secara persisten menggunakan **Web Storage API (`localStorage`)**.
+  - Sinkronisasi otomatis saat reload halaman: preferensi yang tersimpan langsung dimuat kembali tanpa reset ke default.
+  - Integrasi terpadu antara pembatasan jumlah item dan pencarian real-time.
+
+
 
 
 ## Fitur yang Sudah Selesai

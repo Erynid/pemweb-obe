@@ -56,6 +56,38 @@ const inventaris = [
         kondisi: "Rusak",
         lokasi: "Pos Pengawas",
     },
+    {
+        id: 7,
+        nama: "Jangkar Lipat Galvanis",
+        kategori: "Alat Tangkap",
+        jumlah: 8,
+        kondisi: "Baik",
+        lokasi: "Dermaga Barat",
+    },
+    {
+        id: 8,
+        nama: "Radio Komunikasi VHF Marine",
+        kategori: "Navigasi",
+        jumlah: 6,
+        kondisi: "Baik",
+        lokasi: "Pos Pengawas",
+    },
+    {
+        id: 9,
+        nama: "Lampu Badai Solar Sel",
+        kategori: "Keselamatan",
+        jumlah: 18,
+        kondisi: "Baik",
+        lokasi: "Pos Pengawas",
+    },
+    {
+        id: 10,
+        nama: "Timbangan Gantung Ikan 100kg",
+        kategori: "Penyimpanan",
+        jumlah: 4,
+        kondisi: "Perlu Servis",
+        lokasi: "Dermaga Timur",
+    },
 ];
 
 console.log("Portal Layanan Pesisir: Data inventaris berhasil dimuat.", inventaris);
@@ -93,3 +125,230 @@ console.log(`Pencarian Alat dengan ID ${idTarget}:`, alatDitemukan);
 console.log("\n--- Ringkasan Format Teks Setiap Alat ---");
 const daftarRingkasanTeks = inventaris.map(formatRingkasanAlat);
 daftarRingkasanTeks.forEach((ringkasan) => console.log(ringkasan));
+
+/* ==========================================================================
+   Latihan Praktikum 1: Pencarian Real-Time & Render Inventaris
+   ========================================================================== */
+const inventarisList = document.querySelector("#inventaris-list");
+const search = document.querySelector("#search");
+
+/**
+ * Merender daftar alat inventaris ke dalam elemen DOM
+ * @param {Array<Object>} items - Data alat yang akan dirender
+ * @param {string} [keyword=""] - Kata kunci pencarian saat ini (opsional)
+ */
+function renderItems(items, keyword = "") {
+    if (!inventarisList) return;
+
+    // Jika tidak ada hasil pencarian, tampilkan pesan yang ramah
+    if (items.length === 0) {
+        inventarisList.innerHTML = `
+            <div class="pesan-kosong" role="status">
+                <div class="pesan-kosong-ikon">🔍</div>
+                <h3>Alat Tidak Ditemukan</h3>
+                <p>Tidak ada alat inventaris yang cocok dengan kata kunci "<strong>${keyword}</strong>".</p>
+                <p class="pesan-kosong-saran">Saran: Periksa ejaan kata kunci atau coba cari dengan nama alat lain (misalnya: <em>Jaring</em>, <em>GPS</em>, <em>Mesin</em>).</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Render daftar kartu alat inventaris secara dinamis
+    inventarisList.innerHTML = items
+        .map((item) => {
+            let badgeKondisiClass = "badge-kondisi-baik";
+            if (item.kondisi === "Perlu Servis") {
+                badgeKondisiClass = "badge-kondisi-servis";
+            } else if (item.kondisi === "Rusak") {
+                badgeKondisiClass = "badge-kondisi-rusak";
+            }
+
+            return `
+                <article class="inventaris-card" data-id="${item.id}">
+                    <div class="inventaris-card-header">
+                        <span class="badge-kategori">${item.kategori}</span>
+                        <span class="badge-kondisi ${badgeKondisiClass}">${item.kondisi}</span>
+                    </div>
+                    <h3 class="inventaris-card-title">${item.nama}</h3>
+                    <div class="inventaris-card-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Jumlah Unit:</span>
+                            <span class="detail-value"><strong>${item.jumlah}</strong> unit</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Lokasi:</span>
+                            <span class="detail-value">${item.lokasi}</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-detail" data-detail="${item.id}">Detail</button>
+                </article>
+            `;
+        })
+        .join("");
+}
+
+/* ==========================================================================
+   Latihan Praktikum 3: Simpan Preferensi Jumlah Item (localStorage)
+   ========================================================================== */
+const limit = document.querySelector("#limit");
+const urlParams = new URLSearchParams(window.location.search);
+const limitQueryParam = urlParams.get("limit");
+if (limitQueryParam) {
+    localStorage.setItem("limit", limitQueryParam);
+}
+if (limit) {
+    limit.value = localStorage.getItem("limit") ?? "5";
+}
+
+/**
+ * Menerapkan filter pencarian dan pembatasan limit tampilan item
+ * @param {string} [keywordOverride=null] - Kata kunci pencarian override
+ */
+function updateInventarisView(keywordOverride = null) {
+    const rawKeyword = keywordOverride !== null ? keywordOverride : (search ? search.value : "");
+    const keyword = rawKeyword.toLowerCase().trim();
+    const currentLimit = limit ? Number(limit.value) : 5;
+
+    const filtered = inventaris.filter((item) =>
+        item.nama.toLowerCase().includes(keyword)
+    );
+
+    // Potong array sesuai preferensi limit tersimpan di localStorage
+    renderItems(filtered.slice(0, currentLimit), rawKeyword);
+}
+
+// Render data awal inventaris sesuai preferensi limit tersimpan
+updateInventarisView();
+
+// Event listener perubahan preferensi limit
+if (limit) {
+    limit.addEventListener("change", () => {
+        localStorage.setItem("limit", limit.value);
+        updateInventarisView();
+    });
+}
+
+// Event listener pencarian real-time dengan filter case-insensitive
+if (search) {
+    search.addEventListener("input", (event) => {
+        updateInventarisView(event.target.value);
+    });
+
+    // Otomatis sinkronisasi jika terdapat parameter ?q= di URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryParam = urlParams.get("q");
+    if (queryParam) {
+        search.value = queryParam;
+        updateInventarisView(queryParam);
+    }
+}
+
+/* ==========================================================================
+   Latihan Praktikum 2: Tombol Detail dengan Event Delegation
+   ========================================================================== */
+const daftar = inventarisList;
+const detailModal = document.querySelector("#detail-modal");
+const modalContent = document.querySelector("#modal-content");
+const btnCloseModal = document.querySelector("#btn-close-modal");
+const btnFooterClose = document.querySelector("#btn-footer-close");
+
+/**
+ * Menampilkan modal dialog rincian alat inventaris secara interaktif
+ * @param {Object} item - Objek data alat inventaris
+ */
+function tampilkanDetail(item) {
+    if (!item || !detailModal || !modalContent) return;
+
+    let badgeKondisiClass = "badge-kondisi-baik";
+    let statusOperasional = "Siap Digunakan untuk Aktivitas Pesisir";
+    if (item.kondisi === "Perlu Servis") {
+        badgeKondisiClass = "badge-kondisi-servis";
+        statusOperasional = "Terjadwal untuk Perawatan & Servis Berkala";
+    } else if (item.kondisi === "Rusak") {
+        badgeKondisiClass = "badge-kondisi-rusak";
+        statusOperasional = "Tidak Siap Operasi / Butuh Penggantian Suku Cadang";
+    }
+
+    modalContent.innerHTML = `
+        <div class="modal-detail-hero">
+            <span class="badge-kategori">${item.kategori}</span>
+            <h4>${item.nama}</h4>
+            <span class="badge-kondisi ${badgeKondisiClass}">${item.kondisi}</span>
+        </div>
+        <div class="modal-detail-grid">
+            <div class="modal-detail-item">
+                <span class="modal-label">Kode Inventaris</span>
+                <span class="modal-value">#INV-00${item.id}</span>
+            </div>
+            <div class="modal-detail-item">
+                <span class="modal-label">Kategori</span>
+                <span class="modal-value">${item.kategori}</span>
+            </div>
+            <div class="modal-detail-item">
+                <span class="modal-label">Stok Unit Tersedia</span>
+                <span class="modal-value"><strong>${item.jumlah}</strong> unit</span>
+            </div>
+            <div class="modal-detail-item">
+                <span class="modal-label">Lokasi Sentra</span>
+                <span class="modal-value">${item.lokasi}</span>
+            </div>
+            <div class="modal-detail-item full-width">
+                <span class="modal-label">Status Operasional</span>
+                <span class="modal-value">${statusOperasional}</span>
+            </div>
+        </div>
+    `;
+
+    if (typeof detailModal.showModal === "function") {
+        detailModal.showModal();
+    } else {
+        detailModal.setAttribute("open", "");
+    }
+}
+
+// Event delegation pada container daftar inventaris (sesuai instruksi praktikum)
+if (daftar) {
+    daftar.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-detail]");
+        if (!button) return;
+
+        const item = inventaris.find(
+            (data) => data.id === Number(button.dataset.detail)
+        );
+
+        tampilkanDetail(item);
+    });
+}
+
+// Handler penutupan modal dialog
+if (btnCloseModal) {
+    btnCloseModal.addEventListener("click", () => detailModal?.close());
+}
+if (btnFooterClose) {
+    btnFooterClose.addEventListener("click", () => detailModal?.close());
+}
+if (detailModal) {
+    detailModal.addEventListener("click", (event) => {
+        const rect = detailModal.getBoundingClientRect();
+        const isInDialog = (
+            rect.top <= event.clientY &&
+            event.clientY <= rect.top + rect.height &&
+            rect.left <= event.clientX &&
+            event.clientX <= rect.left + rect.width
+        );
+        if (!isInDialog) {
+            detailModal.close();
+        }
+    });
+
+    // Otomatis buka dialog jika URL memiliki parameter ?detail=
+    const detailParam = new URLSearchParams(window.location.search).get("detail");
+    if (detailParam) {
+        const item = inventaris.find((data) => data.id === Number(detailParam));
+        if (item) {
+            tampilkanDetail(item);
+        }
+    }
+}
+
+
