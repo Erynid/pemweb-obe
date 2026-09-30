@@ -351,4 +351,154 @@ if (detailModal) {
     }
 }
 
+/* ==========================================================================
+   Latihan Praktikum A: Accessible Equipment Loan Form Logic
+   ========================================================================== */
+const formPeminjaman = document.querySelector("#form-peminjaman-alat");
+const formAlert = document.querySelector("#form-alert");
+const inputTglPinjam = document.querySelector("#form-tgl-pinjam");
+const inputTglKembali = document.querySelector("#form-tgl-kembali");
+const btnResetPeminjaman = document.querySelector("#btn-reset-peminjaman");
+
+if (formPeminjaman) {
+    // 1. Inisialisasi batasan tanggal minimum hari ini
+    const today = new Date().toISOString().split("T")[0];
+    if (inputTglPinjam) {
+        inputTglPinjam.min = today;
+        inputTglPinjam.value = today;
+        
+        // Default tanggal kembali = hari ini + 3 hari
+        const defaultKembali = new Date();
+        defaultKembali.setDate(defaultKembali.getDate() + 3);
+        if (inputTglKembali) {
+            inputTglKembali.min = today;
+            inputTglKembali.value = defaultKembali.toISOString().split("T")[0];
+        }
+
+        // Sinkronisasi otomatis agar tanggal kembali tidak sebelum tanggal mulai
+        inputTglPinjam.addEventListener("change", () => {
+            if (inputTglKembali) {
+                inputTglKembali.min = inputTglPinjam.value;
+                if (inputTglKembali.value && inputTglKembali.value < inputTglPinjam.value) {
+                    inputTglKembali.value = inputTglPinjam.value;
+                }
+            }
+        });
+    }
+
+    // 2. Handler submit dengan validasi aksesibel & pengumuman status
+    formPeminjaman.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        // Validasi HTML5 Constraint Validation
+        if (!formPeminjaman.checkValidity()) {
+            const firstInvalid = formPeminjaman.querySelector(":invalid");
+            
+            if (formAlert) {
+                formAlert.className = "form-alert alert-error";
+                formAlert.style.display = "block";
+                formAlert.innerHTML = `
+                    <div class="alert-title">
+                        <span aria-hidden="true">⚠️</span>
+                        <span>Formulir Belum Lengkap</span>
+                    </div>
+                    <p>Mohon periksa kembali kolom yang bertanda bintang merah (*). Pastikan seluruh informasi telah diisi dengan benar sebelum mengirimkan permohonan.</p>
+                `;
+                formAlert.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+
+            if (firstInvalid) {
+                firstInvalid.focus();
+            }
+            return;
+        }
+
+        // Ambil data formulir jika valid
+        const formData = new FormData(formPeminjaman);
+        const data = {
+            nama: formData.get("nama") || "-",
+            judul: formData.get("judul") || "-",
+            email: formData.get("email") || "-",
+            telepon: formData.get("telepon") || "-",
+            kategori: formData.get("kategori") || "-",
+            lokasi: formData.get("lokasi") || "-",
+            jumlah: formData.get("jumlah") || "1",
+            tglPinjam: formData.get("tgl_pinjam") || "-",
+            tglKembali: formData.get("tgl_kembali") || "-",
+            deskripsi: formData.get("deskripsi") || "-"
+        };
+
+        // Buat nomor registrasi tiket peminjaman acak
+        const noTiket = "PINJAM-" + Math.floor(100000 + Math.random() * 900000);
+
+        if (formAlert) {
+            formAlert.className = "form-alert alert-success";
+            formAlert.style.display = "block";
+            formAlert.innerHTML = `
+                <div class="alert-title">
+                    <span aria-hidden="true">✅</span>
+                    <span>Permohonan Peminjaman Berhasil Diajukan!</span>
+                </div>
+                <p>Terima kasih <strong>${data.nama}</strong>, permohonan peminjaman sarana pesisir Anda telah berhasil didaftarkan dan segera diverifikasi oleh petugas sentra.</p>
+                
+                <div class="receipt-card">
+                    <h4>Bukti Registrasi Peminjaman: <span style="color: var(--color-primary-dark);">${noTiket}</span></h4>
+                    <div class="receipt-grid">
+                        <div class="receipt-item"><strong>Agenda Melaut:</strong> ${data.judul}</div>
+                        <div class="receipt-item"><strong>Kategori Alat:</strong> ${data.kategori}</div>
+                        <div class="receipt-item"><strong>Jumlah Unit:</strong> ${data.jumlah} unit</div>
+                        <div class="receipt-item"><strong>Pos Pengambilan:</strong> ${data.lokasi}</div>
+                        <div class="receipt-item"><strong>Periode:</strong> ${data.tglPinjam} s.d ${data.tglKembali}</div>
+                        <div class="receipt-item"><strong>Kontak:</strong> ${data.telepon} (${data.email})</div>
+                    </div>
+                </div>
+            `;
+            formAlert.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+
+        // Reset nilai formulir setelah sukses
+        formPeminjaman.reset();
+        if (inputTglPinjam) inputTglPinjam.value = today;
+    });
+
+    // 3. Handler reset formulir
+    if (btnResetPeminjaman) {
+        btnResetPeminjaman.addEventListener("click", () => {
+            if (formAlert) {
+                formAlert.style.display = "none";
+                formAlert.innerHTML = "";
+            }
+        });
+    }
+
+    // 4. Otomatisasi data contoh via URL parameter (?demo_form=1 atau ?submitted=1)
+    const formParams = new URLSearchParams(window.location.search);
+    if (formParams.get("demo_form") === "1" || formParams.get("submitted") === "1") {
+        const inputNama = document.querySelector("#form-nama");
+        const inputJudul = document.querySelector("#form-judul");
+        const inputEmail = document.querySelector("#form-email");
+        const inputTelp = document.querySelector("#form-telepon");
+        const selectKategori = document.querySelector("#form-kategori");
+        const selectLokasi = document.querySelector("#form-lokasi");
+        const inputJumlah = document.querySelector("#form-jumlah");
+        const inputDeskripsi = document.querySelector("#form-deskripsi");
+        const checkPersetujuan = document.querySelector("#form-persetujuan");
+
+        if (inputNama) inputNama.value = "Muhammad Dzakir Dzakwan";
+        if (inputJudul) inputJudul.value = "Operasi Penangkapan Ikan Musim Timur";
+        if (inputEmail) inputEmail.value = "dzakir@contoh.id";
+        if (inputTelp) inputTelp.value = "081234567890";
+        if (selectKategori) selectKategori.value = "Alat Tangkap";
+        if (selectLokasi) selectLokasi.value = "Dermaga Barat";
+        if (inputJumlah) inputJumlah.value = "2";
+        if (inputDeskripsi) inputDeskripsi.value = "Peminjaman 2 unit jaring insang untuk operasi melaut 3 hari nelayan tradisional sentra pesisir.";
+        if (checkPersetujuan) checkPersetujuan.checked = true;
+
+        if (formParams.get("submitted") === "1") {
+            formPeminjaman.dispatchEvent(new Event("submit", { cancelable: true }));
+        }
+    }
+}
+
+
 

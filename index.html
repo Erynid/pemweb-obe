@@ -26,7 +26,7 @@
         <li><a href="#profil">Profil Wilayah</a></li>
         <li><a href="#layanan">Layanan & UMKM</a></li>
         <li><a href="#inventaris">Inventaris Alat</a></li>
-        <li><a href="#kontak">Hubungi Kami</a></li>
+        <li><a href="#peminjaman">Peminjaman Alat</a></li>
       </ul>
     </nav>
   </header>
@@ -84,30 +84,239 @@
       </div>
     </section>
 
-    <section id="kontak">
-      <h2>Layanan Pengaduan & Kontak</h2>
-      <p>Silakan tinggalkan pesan atau pertanyaan Anda melalui formulir di bawah ini:</p>
+    <section id="peminjaman" class="section-peminjaman" aria-labelledby="heading-peminjaman">
+      <div class="section-header">
+        <h2 id="heading-peminjaman">Formulir Permohonan Peminjaman Alat Sentra Pesisir</h2>
+        <p class="section-lead">
+          Layanan terpadu bagi nelayan, kelompok usaha binaan, dan masyarakat maritim untuk mengajukan peminjaman sarana dan fasilitas operasional sentra pesisir.
+        </p>
+      </div>
 
-      <form action="#" method="post">
-        <div>
-          <label for="nama">Nama Lengkap:</label>
-          <input type="text" id="nama" name="nama" required>
-        </div>
+      <div class="form-container">
+        <!-- Status alert interaktif ramah screen reader (WCAG Live Region) -->
+        <div id="form-alert" class="form-alert" role="status" aria-live="polite" style="display: none;"></div>
 
-        <div>
-          <label for="email">Alamat Email:</label>
-          <input type="email" id="email" name="email" required>
-        </div>
+        <form id="form-peminjaman-alat" action="#" method="post" novalidate>
+          
+          <!-- Fieldset 1: Identitas & Kontak Pemohon -->
+          <fieldset class="form-fieldset">
+            <legend class="form-legend">
+              <span class="legend-badge">1</span>
+              <span>Identitas & Kontak Pemohon</span>
+            </legend>
 
-        <div>
-          <label for="pesan">Pesan / Masukan:</label>
-          <textarea id="pesan" name="pesan" rows="4" required></textarea>
-        </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="form-nama">
+                  Nama Lengkap Pemohon
+                  <span class="required-indicator" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="form-nama"
+                  name="nama"
+                  required
+                  aria-required="true"
+                  autocomplete="name"
+                  placeholder="Contoh: Muhammad Dzakir Dzakwan"
+                >
+              </div>
 
-        <div>
-          <button type="submit">Kirim Pesan</button>
-        </div>
-      </form>
+              <div class="form-group">
+                <label for="form-judul">
+                  Judul / Nama Agenda Melaut
+                  <span class="required-indicator" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="form-judul"
+                  name="judul"
+                  required
+                  aria-required="true"
+                  placeholder="Contoh: Operasi Penangkapan Ikan Musim Timur"
+                >
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="form-email">
+                  Alamat Email Aktif
+                  <span class="required-indicator" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="form-email"
+                  name="email"
+                  required
+                  aria-required="true"
+                  autocomplete="email"
+                  placeholder="dzakir@contoh.id"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="form-telepon">
+                  Nomor Telepon / WhatsApp
+                  <span class="required-indicator" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="form-telepon"
+                  name="telepon"
+                  required
+                  aria-required="true"
+                  autocomplete="tel"
+                  placeholder="081234567890"
+                  aria-describedby="telepon-hint"
+                >
+                <p id="telepon-hint" class="field-hint">Pastikan nomor aktif untuk konfirmasi ketersediaan alat oleh petugas sentra.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Fieldset 2: Rincian Peminjaman Peralatan -->
+          <fieldset class="form-fieldset">
+            <legend class="form-legend">
+              <span class="legend-badge">2</span>
+              <span>Rincian Peralatan & Jadwal Operasional</span>
+            </legend>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="form-kategori">
+                  Kategori Peralatan
+                  <span class="required-indicator" aria-hidden="true">*</span>
+                </label>
+                <select id="form-kategori" name="kategori" required aria-required="true">
+                  <option value="" disabled selected>-- Pilih Kategori Peralatan --</option>
+                  <option value="Alat Tangkap">Alat Tangkap (Jaring Insang, Jangkar Lipat)</option>
+                  <option value="Navigasi">Navigasi & Komunikasi (GPS Navigasi, Fishfinder, Radio VHF)</option>
+                  <option value="Mesin Kapal">Mesin Kapal (Mesin Tempel 15 PK)</option>
+                  <option value="Penyimpanan">Penyimpanan Hasil Laut (Coolbox 200L, Timbangan Gantung)</option>
+                  <option value="Keselamatan">Keselamatan Pelayaran (Life Jacket, Lampu Badai Solar)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="form-lokasi">
+                  Pos Sentra Pengambilan
+                  <span class="required-indicator" aria-hidden="true">*</span>
+                </label>
+                <select id="form-lokasi" name="lokasi" required aria-required="true">
+                  <option value="" disabled selected>-- Pilih Pos Dermaga --</option>
+                  <option value="Dermaga Barat">Dermaga Barat (Sentra Utama Tangkap)</option>
+                  <option value="Dermaga Timur">Dermaga Timur (Penyimpanan & Timbangan)</option>
+                  <option value="Pos Pengawas">Pos Pengawas (Navigasi & Keselamatan)</option>
+                  <option value="Bengkel Sentral">Bengkel Sentral (Mesin & Mekanikal)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label for="form-jumlah">
+                  Jumlah Unit
+                  <span class="required-indicator" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="form-jumlah"
+                  name="jumlah"
+                  min="1"
+                  max="10"
+                  value="1"
+                  required
+                  aria-required="true"
+                  aria-describedby="jumlah-hint"
+                >
+                <p id="jumlah-hint" class="field-hint">Maksimal 10 unit per armada melaut.</p>
+              </div>
+
+              <div class="form-group">
+                <label for="form-tgl-pinjam">
+                  Tanggal Mulai
+                  <span class="required-indicator" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="form-tgl-pinjam"
+                  name="tgl_pinjam"
+                  required
+                  aria-required="true"
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="form-tgl-kembali">
+                  Rencana Kembali
+                  <span class="required-indicator" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="form-tgl-kembali"
+                  name="tgl_kembali"
+                  required
+                  aria-required="true"
+                  aria-describedby="tgl-hint"
+                >
+                <p id="tgl-hint" class="field-hint">Batas waktu maksimal 7 hari kerja.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Fieldset 3: Catatan Keperluan & Persetujuan -->
+          <fieldset class="form-fieldset">
+            <legend class="form-legend">
+              <span class="legend-badge">3</span>
+              <span>Catatan Keperluan & Pernyataan Persetujuan</span>
+            </legend>
+
+            <div class="form-group">
+              <label for="form-deskripsi">
+                Deskripsi Keperluan & Wilayah Tangkap
+                <span class="required-indicator" aria-hidden="true">*</span>
+              </label>
+              <textarea
+                id="form-deskripsi"
+                name="deskripsi"
+                rows="4"
+                required
+                aria-required="true"
+                placeholder="Tuliskan estimasi koordinat/wilayah perairan melaut, rincian ABK kapal, serta kebutuhan spesifik alat..."
+                aria-describedby="deskripsi-hint"
+              ></textarea>
+              <p id="deskripsi-hint" class="field-hint">Minimal 15 karakter untuk kejelasan pencatatan logistik sentra maritim.</p>
+            </div>
+
+            <div class="form-checkbox-group">
+              <input
+                type="checkbox"
+                id="form-persetujuan"
+                name="persetujuan"
+                required
+                aria-required="true"
+              >
+              <label for="form-persetujuan" class="checkbox-label">
+                Saya menyatakan data di atas benar, berkomitmen menjaga keutuhan peralatan inventaris, dan bersedia mematuhi seluruh peraturan serta mengembalikan sarana tepat waktu sesuai ketentuan Sentra Pesisir.
+                <span class="required-indicator" aria-hidden="true">*</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <button type="submit" id="btn-submit-peminjaman" class="btn-submit">
+              <span class="btn-icon" aria-hidden="true">📋</span>
+              Ajukan Permohonan Peminjaman
+            </button>
+            <button type="reset" id="btn-reset-peminjaman" class="btn-reset">
+              Reset Isian
+            </button>
+          </div>
+
+        </form>
+      </div>
     </section>
 
   </main>

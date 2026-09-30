@@ -58,22 +58,79 @@
   - Penyimpanan preferensi pengguna secara persisten menggunakan **Web Storage API (`localStorage`)**.
   - Sinkronisasi otomatis saat reload halaman: preferensi yang tersimpan langsung dimuat kembali tanpa reset ke default.
   - Integrasi terpadu antara pembatasan jumlah item dan pencarian real-time.
+- [x] **Formulir Proyek Nyata & Aksesibel (Latihan Praktikum A)**:
+  - Implementasi formulir permohonan peminjaman alat sentra pesisir terpadu berbasis kebutuhan riil nelayan/warga.
+  - Kelengkapan field standar: Nama/Judul, Email/Kontak, Kategori/Pilihan, Angka/Tanggal, Deskripsi/Catatan, dan Checkbox Persetujuan.
+  - Aksesibilitas tingkat tinggi (WCAG 2.1): fieldset/legend, label eksplisit, aria-describedby, aria-required, aria-live status alert, autofokus error pertama, serta keyboard focus ring (:focus-visible).
 
+---
 
+## Latihan Praktikum A: Formulir Proyek Nyata & Aksesibilitas Web
 
+### 1. Tujuan Formulir
+Formulir **Permohonan Peminjaman Alat Sentra Pesisir** dirancang sebagai antarmuka nyata (bukan form kosong/dummy) yang menghubungkan nelayan tradisional dan kelompok usaha pesisir dengan pengelola sentra maritim. 
 
-## Fitur yang Sudah Selesai
-- [x] **Struktur HTML5 Semantik**: Penggunaan elemen semantik terstruktur dan valid.
-- [x] **CSS Reset & Box Sizing Universal**: Menghilangkan margin/padding bawaan browser dan menetapkan `box-sizing: border-box`.
-- [x] **Design Tokens (:root)**: Variabel CSS modular untuk warna, jarak (*spacing*), sudut (*radius*), dan permukaan latar.
-- [x] **Navigasi Responsif Flexbox**: Navigasi utama yang otomatis membungkus (*wrap*) pada layar sempit tanpa memicu *overflow horizontal*.
-- [x] **Papan Kanban CSS Grid**: Tampilan kartu tugas 1 kolom pada layar *mobile* dan bertransisi menjadi 3 kolom sejajar pada layar lebar (`@media (min-width: 48rem)`).
-- [x] **Aksesibilitas Keyboard & Focus States**:
-  - *Skip Link* (`#main-content`) tersembunyi yang muncul saat ditekan tombol `Tab`.
-  - Indikator ring fokus jelas (`:focus-visible`) dengan outline 3px pada link, tombol, input formulir, dan kartu tugas (`tabindex="0"`).
-- [x] **Formulir Manajemen Tugas**: Input data judul tugas, mata kuliah, dan *datetime-local* deadline dengan validasi HTML.
-- [x] **Pengaturan Notifikasi Web Push**: Bagian informasi perizinan Web Push API lengkap dengan ilustrasi dan tombol aksi.
-- [x] **Log Penggunaan AI**: Dokumentasi riwayat penggunaan AI dan verifikasi mandiri pada [AI_USAGE_LOG.md](file:///c:/laragon/www/pemweb-obe/AI_USAGE_LOG.md).
+Melalui formulir ini, masyarakat pesisir dapat:
+1. Mengajukan peminjaman peralatan inventaris laut (alat tangkap, navigasi GPS, radio komunikasi, mesin perahu, coolbox, hingga life jacket).
+2. Menentukan kuota unit, tanggal peminjaman, serta estimasi tanggal pengembalian secara terstruktur.
+3. Mencatatkan identitas kontak, rencana wilayah tangkap, serta memberikan komitmen pemeliharaan aset inventaris sentra secara transparan.
+
+---
+
+### 2. Rincian Minimal Field Formulir
+
+| No | Kategori Persyaratan | Nama Field pada Form | Elemen / Tipe Input | Atribut & Batasan Validasi | Fungsi & Tujuan |
+|---|---|---|---|---|---|
+| 1 | **Nama / Judul** | `form-nama` | `<input type="text">` | `required`, `aria-required="true"`, `autocomplete="name"` | Mengidentifikasi nama lengkap pemohon peminjaman alat. |
+| 2 | **Nama / Judul** | `form-judul` | `<input type="text">` | `required`, `aria-required="true"` | Menjelaskan agenda kegiatan/operasi melaut (misal: "Operasi Penangkapan Ikan Musim Timur"). |
+| 3 | **Email / Kontak** | `form-email` | `<input type="email">` | `required`, `aria-required="true"`, `autocomplete="email"` | Alamat surel aktif untuk pengiriman bukti tiket dan verifikasi. |
+| 4 | **Email / Kontak** | `form-telepon` | `<input type="tel">` | `required`, `aria-required="true"`, `autocomplete="tel"`, `aria-describedby` | Nomor WhatsApp/telepon untuk koordinasi pengambilan unit di sentra. |
+| 5 | **Kategori / Pilihan** | `form-kategori` | `<select>` | `required`, `aria-required="true"` | Memilih kelompok sarana (Alat Tangkap, Navigasi, Mesin, Penyimpanan, Keselamatan). |
+| 6 | **Kategori / Pilihan** | `form-lokasi` | `<select>` | `required`, `aria-required="true"` | Memilih pos dermaga sentra terdekat (Dermaga Barat, Timur, Pos Pengawas, Bengkel). |
+| 7 | **Angka / Tanggal** | `form-jumlah` | `<input type="number">` | `min="1"`, `max="10"`, `required`, `aria-describedby` | Membatasi jumlah unit pinjaman wajar per armada (maksimal 10 unit). |
+| 8 | **Angka / Tanggal** | `form-tgl-pinjam` | `<input type="date">` | `required`, `min="[hari-ini]"` | Menentukan tanggal awal peminjaman (dinamis minimal hari ini). |
+| 9 | **Angka / Tanggal** | `form-tgl-kembali` | `<input type="date">` | `required`, `min="[tgl-pinjam]"`, `aria-describedby` | Menentukan estimasi waktu pengembalian alat (maksimal 7 hari). |
+| 10 | **Deskripsi / Catatan** | `form-deskripsi` | `<textarea>` | `rows="4"`, `required`, `aria-describedby` | Catatan estimasi wilayah melaut, jumlah ABK kapal, serta kebutuhan teknis khusus. |
+| 11 | **Checkbox Persetujuan** | `form-persetujuan` | `<input type="checkbox">` | `required`, `aria-required="true"` | Pernyataan komitmen mematuhi SOP pemeliharaan alat dan jadwal pengembalian. |
+
+---
+
+### 3. Catatan Aksesibilitas (Web Content Accessibility Guidelines - WCAG)
+
+Penerapan aksesibilitas formulir ini mengikuti prinsip WCAG 2.1 Level AA:
+
+1. **Pengelompokan Logis dengan Semantik `<fieldset>` dan `<legend>`**:
+   - Seluruh kontrol input dikelompokkan ke dalam 3 unit bidang semantik:
+     - Fieldset 1: *Identitas & Kontak Pemohon*
+     - Fieldset 2: *Rincian Peralatan & Jadwal Operasional*
+     - Fieldset 3: *Catatan Keperluan & Pernyataan Persetujuan*
+   - Memberikan konteks struktural lengkap bagi pengguna screen reader saat berpindah grup input.
+
+2. **Asosiasi Eksplisit Label & Kontrol Input (`for` dan `id`)**:
+   - Seluruh elemen `<label>` memiliki atribut `for` yang secara tepat merujuk ke atribut `id` pada field input terkait.
+   - Mengklik label otomatis memfokuskan atau mencentang kontrol input, memperbesar area klik/sentuh secara signifikan (*touch-friendly*).
+
+3. **Petunjuk Tambahan Terhubung via `aria-describedby`**:
+   - Elemen teks panduan (misal: `#telepon-hint`, `#jumlah-hint`, `#tgl-hint`, `#deskripsi-hint`) dihubungkan langsung ke input melalui atribut `aria-describedby`.
+   - Screen reader secara otomatis membacakan petunjuk ini sesaat setelah label utama diumumkan.
+
+4. **Penanda Input Wajib Aksesibel**:
+   - Setiap kolom wajib menyematkan atribut HTML `required` sekaligus `aria-required="true"`.
+   - Indikator visual tanda bintang merah (`*`) dibungkus dengan `aria-hidden="true"` guna mencegah screen reader membaca kata "bintang" atau "asterisk" secara repetitif.
+
+5. **Umpan Balik Live Status untuk Pembaca Layar (`aria-live="polite"`)**:
+   - Komponen `#form-alert` dilengkapi atribut `role="status"` dan `aria-live="polite"`.
+   - Saat formulir dikirim (baik terjadi kesalahan validasi maupun berhasil submit), pembaruan isi pesan langsung diumumkan secara lisan oleh teknologi asistif tanpa memuat ulang (*reload*) halaman.
+
+6. **Penanganan Error Interaktif & Auto-Focus**:
+   - Jika terdapat kolom yang belum terisi saat pengiriman, skrip mendeteksi elemen invalid pertama (`:invalid`), memindahkan fokus kursor langsung ke field tersebut (`firstInvalid.focus()`), serta menampilkan banner peringatan yang jelas.
+
+7. **Indikator Fokus Keyboard Kontras Tinggi (`:focus-visible`)**:
+   - Seluruh elemen input, tombol submit, dan tombol reset memiliki indikator ring fokus tegas (`outline: none` digantikan dengan `border-color: var(--color-primary)` dan `box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25)`).
+   - Rasio kontras indikator fokus memenuhi standar WCAG (rasio kontras lebih dari 3:1 terhadap warna latar belakang).
+
+8. **Optimasi Kemudahan Pengisian (`autocomplete`)**:
+   - Kolom nama (`autocomplete="name"`), email (`autocomplete="email"`), dan telepon (`autocomplete="tel"`) mendukung fitur pengisian otomatis browser untuk mempercepat aksesibilitas bagi pengguna dengan keterbatasan mobilitas motorik.
 
 ---
 
@@ -82,13 +139,25 @@
 pemweb-obe/
 │
 ├── images/
-│   ├── ilustrasi-notif.png   # Aset gambar ilustrasi notifikasi browser
-│   └── imagsdes.jpg          # Aset media pendukung
+│   ├── ilustrasi-notif.png                 # Aset gambar notifikasi
+│   ├── imagsdes.jpg                        # Aset media pendukung pesisir
+│   ├── screenshot-sebelum-pencarian.png    # Dokumentasi praktikum 1
+│   ├── screenshot-sesudah-pencarian.png    # Dokumentasi praktikum 1
+│   ├── screenshot-tidak-ada-hasil.png      # Dokumentasi praktikum 1
+│   ├── screenshot-tombol-detail.png        # Dokumentasi praktikum 2
+│   ├── screenshot-hasil-detail.png         # Dokumentasi praktikum 2
+│   ├── screenshot-limit-5-item.png         # Dokumentasi praktikum 3
+│   ├── screenshot-limit-10-item-reload.png # Dokumentasi praktikum 3
+│   └── screenshot-accessible-form.png      # Dokumentasi praktikum A (Formulir Aksesibel)
 │
-├── AI_USAGE_LOG.md           # Dokumentasi riwayat penggunaan AI
-├── README.md                 # Dokumentasi utama proyek
-├── index.html                # Dokumen HTML utama (TaskTrack)
-└── styles.css                # Lembar gaya CSS responsif & token desain
+├── js/
+│   ├── app.js                              # Logika utama, modular filter, & validasi form
+│   └── utils.js                            # Helper statistik & pemformat data inventaris
+│
+├── AI_USAGE_LOG.md                         # Catatan transparansi pemanfaatan AI
+├── README.md                               # Dokumentasi arsitektur, tujuan, & aksesibilitas
+├── index.html                              # Dokumen semantik HTML5 utama
+└── styles.css                              # Tata letak responsif, token desain, & form styling
 ```
 
 ---
@@ -102,12 +171,9 @@ pemweb-obe/
      `C:\laragon\www\pemweb-obe`
 3. **Akses via Web Browser**:
    - Buka browser (Chrome, Firefox, Edge, dll.).
-   - Akses salah satu URL berikut:
-     - **URL Direktori Lokal**: [http://localhost/pemweb-obe/](http://localhost/pemweb-obe/)
-     - **URL VirtualHost Laragon**: [http://pemweb-obe.test](http://pemweb-obe.test)
+   - Akses URL direktori lokal: [http://localhost/pemweb-obe/](http://localhost/pemweb-obe/)
 
 ---
 
 ## Catatan
-- File entri utama proyek adalah [index.html](file:///c:/laragon/www/pemweb-obe/index.html) yang terhubung langsung dengan [styles.css](file:///c:/laragon/www/pemweb-obe/styles.css).
-- Pastikan folder `images/` berisi file `ilustrasi-notif.png` agar elemen visual prompt izin notifikasi ter-render sempurna.
+- File entri utama proyek adalah [index.html](file:///c:/laragon/www/pemweb-obe/index.html) yang terhubung langsung dengan [styles.css](file:///c:/laragon/www/pemweb-obe/styles.css) dan [js/app.js](file:///c:/laragon/www/pemweb-obe/js/app.js).
