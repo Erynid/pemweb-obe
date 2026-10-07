@@ -348,24 +348,88 @@ if (detailModal) {
 }
 
 /* ==========================================================================
-   Pertemuan 7 — Latihan 2: Fetch dan Render
-   Tujuan: Data API tampil di halaman proyek, bukan hanya di Console.
+   Pertemuan 7 — Latihan 2 & 3: Fetch, Render, Loading, Error, dan Retry
+   Tujuan: Dashboard tidak hanya berjalan saat kondisi ideal.
    ========================================================================== */
 
 /**
+ * Menampilkan animasi loading spinner dan teks sebelum data muncul
+ */
+function renderLoadingState() {
+    if (!inventarisList) return;
+    inventarisList.innerHTML = `
+        <div class="state-loading" role="status" aria-live="polite">
+            <div class="spinner"></div>
+            <p class="state-loading-text">Memuat data inventaris alat pesisir...</p>
+        </div>
+    `;
+}
+
+/**
+ * Menampilkan pesan error dan tombol retry jika pengambilan data gagal
+ * @param {string} errorMessage - Pesan kegagalan fetch
+ */
+function renderErrorState(errorMessage) {
+    if (!inventarisList) return;
+    inventarisList.innerHTML = `
+        <div class="state-error" role="alert">
+            <div class="state-error-icon" aria-hidden="true">⚠️</div>
+            <h3 class="state-error-title">Gagal Memuat Data Inventaris</h3>
+            <p class="state-error-message">Terjadi kesalahan saat memuat endpoint API: <strong>${errorMessage}</strong></p>
+            <p class="state-error-hint">Pastikan URL endpoint benar dan server web aktif.</p>
+            <button type="button" id="btn-retry-inventaris" class="btn-retry">
+                <span class="btn-retry-icon" aria-hidden="true">🔄</span>
+                Coba Lagi (Retry)
+            </button>
+        </div>
+    `;
+
+    // Pasang event listener pada tombol retry
+    const btnRetry = document.querySelector("#btn-retry-inventaris");
+    if (btnRetry) {
+        btnRetry.addEventListener("click", () => {
+            // Hapus parameter simulasi error jika sedang aktif
+            const currentUrl = new URL(window.location.href);
+            if (currentUrl.searchParams.has("error")) {
+                currentUrl.searchParams.delete("error");
+                window.history.replaceState({}, "", currentUrl.pathname + currentUrl.search);
+            }
+            initDashboard();
+        });
+    }
+}
+
+/**
  * Mengambil data inventaris secara asinkron dari endpoint API/JSON
+ * @param {string} [url="./data/inventaris.json"] - URL endpoint yang akan diakses
  * @returns {Promise<Array<Object>>}
  */
-async function fetchItems() {
-    const response = await fetch('./data/inventaris.json');
-    if (!response.ok) throw new Error('Gagal ambil data');
+async function fetchItems(url = "./data/inventaris.json") {
+    // Delay dinamis agar transisi loading spinner terlihat halus dan mudah di-screenshot
+    const urlParams = new URLSearchParams(window.location.search);
+    const delayTime = urlParams.has("loading") ? 3000 : 350;
+    await new Promise((resolve) => setTimeout(resolve, delayTime));
+
+    // Pengujian URL salah: jika terdapat parameter ?error=1 atau ?error=true
+    let targetUrl = url;
+    if (urlParams.get("error") === "1" || urlParams.get("error") === "true") {
+        targetUrl = "./data/url_salah_items.json"; // Endpoint salah yang memicu HTTP 404
+    }
+
+    const response = await fetch(targetUrl);
+    if (!response.ok) {
+        throw new Error(`Gagal ambil data (Status: ${response.status} ${response.statusText || 'Not Found'}) dari "${targetUrl}"`);
+    }
     return await response.json();
 }
 
 /**
- * Inisialisasi dashboard, mengambil data via fetchItems, dan merender ke DOM
+ * Inisialisasi dashboard, mengaktifkan loading spinner, mengambil data via fetchItems, dan merender ke DOM
  */
 async function initDashboard() {
+    // 1. Tampilkan state loading sebelum data muncul (Latihan 3: Loading)
+    renderLoadingState();
+
     try {
         const items = await fetchItems();
         inventaris = Array.isArray(items) ? items : [];
@@ -380,7 +444,7 @@ async function initDashboard() {
             limit.value = String(currentLimit);
         }
 
-        // Render data minimal 6 item ke halaman proyek
+        // Render data minimal 6 item ke halaman proyek (Latihan 2: Render)
         renderItems(inventaris.slice(0, currentLimit));
 
         // Sinkronisasi otomatis parameter pencarian di URL (?q=)
@@ -401,22 +465,17 @@ async function initDashboard() {
         }
     } catch (error) {
         console.error("Gagal memuat data inventaris:", error);
-        // Fallback cadangan jika koneksi terputus
-        inventaris = fallbackInventaris;
-        jalankanAnalisisConsole(inventaris);
-        renderItems(inventaris.slice(0, 6));
-
-        if (inventarisList && inventaris.length === 0) {
-            inventarisList.innerHTML = `
-                <div class="pesan-kosong" role="status">
-                    <div class="pesan-kosong-ikon">⚠️</div>
-                    <h3>Gagal Memuat Data</h3>
-                    <p>Terjadi kesalahan saat memuat data: ${error.message}</p>
-                </div>
-            `;
-        }
+        // 2. Tampilkan pesan error dan tombol retry (Latihan 3: Error & Retry)
+        renderErrorState(error.message);
     }
 }
+
+// Log informasi pengujian praktikum untuk kemudahan verifikasi
+console.log(
+    "%c[Praktikum Pertemuan 7]%c Buka ?error=1 untuk uji Error & Retry State, atau ?loading=1 untuk pause Loading Spinner.",
+    "color: #0284c7; font-weight: bold;",
+    "color: #475569;"
+);
 
 // Jalankan inisialisasi dashboard secara asinkron
 initDashboard();

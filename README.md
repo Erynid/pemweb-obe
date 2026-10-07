@@ -73,6 +73,10 @@
   - Render minimal 6 item inventaris ke antarmuka kartu grid (`renderItems`) dengan informasi lengkap (nama, kategori, stok, kondisi, lokasi).
   - Integrasi terpadu dataset hasil fetch dengan fitur pencarian real-time, preferensi limit item, dan modal dialog detail.
   - Penanganan error (*error handling & fallback state*) dengan pesan antarmuka informatif serta bebas galat di console.
+- [x] **Loading, Error State & Tombol Retry, serta Dokumentasi Endpoint (Pertemuan 7 — Latihan 3)**:
+  - Implementasi state loading visual (animasi spinner & teks keterangan) sebelum data muncul.
+  - Implementasi state error interaktif dengan pesan kegagalan spesifik dan tombol `Coba Lagi` (Retry).
+  - Penyusunan Tabel Dokumentasi Endpoint API komprehensif pada `README.md`.
 
 ---
 
@@ -242,6 +246,51 @@ initDashboard();
 | **UI tetap responsif** | ✅ Terpenuhi | Menggunakan tata letak responsif CSS Grid (`inventaris-grid`) dengan *content-driven media queries*, adaptif dari perangkat mobile hingga desktop tanpa *horizontal scroll*. |
 | **Tidak ada error di Console** | ✅ Terpenuhi | Seluruh pemanggilan fungsi berjalan aman dengan penanganan `try-catch`, validasi respons HTTP (`!response.ok`), dan modul JavaScript tervalidasi. |
 | **Commit setelah berhasil render** | ✅ Terpenuhi | Riwayat commit git mencatat implementasi fungsionalitas fetch dan render data inventaris. |
+
+---
+
+## Pertemuan 7 — Latihan 3: Loading, Error State, dan Dokumentasi Endpoint
+
+### 1. Tujuan Praktikum
+Menjamin ketahanan antarmuka web (*system resilience & error tolerance*) agar dashboard tidak hanya bekerja pada kondisi ideal, melainkan mampu memberikan umpan balik visual (*feedback*) saat data sedang dimuat (*Loading State*) serta menangani kegagalan jaringan atau URL salah dengan anggun (*Error State*) melalui tombol *Retry*.
+
+### 2. Tabel Dokumentasi Endpoint API
+
+| Komponen Endpoint | Spesifikasi Teknis |
+|---|---|
+| **Resource / Nama Data** | Inventaris Sarana & Peralatan Pesisir |
+| **Endpoint URL (Lokal)** | `http://localhost/pemweb-obe/data/inventaris.json` |
+| **Path Relatif Proyek** | `./data/inventaris.json` |
+| **HTTP Method** | `GET` |
+| **Headers Request** | `Accept: application/json` |
+| **Status Code (Sukses)** | `200 OK` |
+| **Status Code (Gagal / URL Salah)** | `404 Not Found` (atau Network Error) |
+| **Content-Type Response** | `application/json; charset=UTF-8` |
+| **Format Payload Data** | JSON Array of Objects (`[ { ... } ]`) |
+| **Parameter Simulasi Pengujian** | • `?error=1`: Menguji Error State & Tombol Retry (mengakses endpoint salah)<br>• `?loading=1`: Menahan tampilan Loading Spinner selama 3 detik untuk kemudahan screenshot |
+
+### 3. Pemetaan Field Data & Elemen Antarmuka
+
+| Nama Field | Tipe Data | Keterangan & Deskripsi | Ditampilkan Pada |
+|---|---|---|---|
+| `id` | `Number` | Identifikasi unik nomor registrasi unit | Dialog Modal Detail (`#INV-00{id}`) |
+| `nama` | `String` | Nama peralatan maritim/sarana pesisir | Judul Kartu Inventaris & Header Modal |
+| `kategori` | `String` | Klasifikasi sarana kerja (*Alat Tangkap, Navigasi, Mesin, dll.*) | Badge Kategori pada Kartu & Modal |
+| `jumlah` | `Number` | Kuantitas unit fisik yang siap dipinjam | Keterangan stok ketersediaan |
+| `kondisi` | `String` | Status kelaikan (*Baik, Perlu Servis, Rusak*) | Badge status kondisi (warna dinamis) |
+| `lokasi` | `String` | Pos penempatan sentra (*Dermaga Barat, Pos Pengawas, dll.*) | Informasi lokasi fisik alat |
+
+### 4. Implementasi Manajemen State Antarmuka
+
+1. **Loading State (`.state-loading`)**:
+   - Diaktifkan segera saat fungsi `initDashboard()` dijalankan sebelum `fetchItems()` selesai.
+   - Menampilkan animasi spinner CSS modern yang berputar halus dan teks keterangan: *"Memuat data inventaris alat pesisir..."*.
+   - Dilengkapi atribut aksesibilitas `role="status"` dan `aria-live="polite"`.
+
+2. **Error State & Tombol Retry (`.state-error` & `.btn-retry`)**:
+   - Terpicu saat respons HTTP gagal (`!response.ok`, status 404, atau jaringan offline).
+   - Menampilkan ikon peringatan visual (`⚠️`), pesan kegagalan spesifik, dan tombol aksi **"Coba Lagi (Retry)"**.
+   - Ketika tombol **Coba Lagi** diklik, sistem menghapus parameter error (jika dalam mode simulasi) dan memanggil ulang fungsi `initDashboard()` untuk memuat kembali data yang valid.
 
 ---
 
