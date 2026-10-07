@@ -352,7 +352,7 @@ if (detailModal) {
 }
 
 /* ==========================================================================
-   Latihan Praktikum A: Accessible Equipment Loan Form Logic
+   Latihan Praktikum A: Accessible Equipment Loan Form Logic & Validation
    ========================================================================== */
 const formPeminjaman = document.querySelector("#form-peminjaman-alat");
 const formAlert = document.querySelector("#form-alert");
@@ -366,7 +366,7 @@ if (formPeminjaman) {
     if (inputTglPinjam) {
         inputTglPinjam.min = today;
         inputTglPinjam.value = today;
-        
+
         // Default tanggal kembali = hari ini + 3 hari
         const defaultKembali = new Date();
         defaultKembali.setDate(defaultKembali.getDate() + 3);
@@ -383,37 +383,338 @@ if (formPeminjaman) {
                     inputTglKembali.value = inputTglPinjam.value;
                 }
             }
+            validateSingleField("form-tgl-pinjam");
+            validateSingleField("form-tgl-kembali");
+        });
+
+        if (inputTglKembali) {
+            inputTglKembali.addEventListener("change", () => {
+                validateSingleField("form-tgl-kembali");
+            });
+        }
+    }
+
+    /**
+     * Helper untuk menampilkan pesan error dekat field (inline)
+     */
+    function setFieldError(fieldId, errorId, message) {
+        const fieldEl = document.getElementById(fieldId);
+        const errorEl = document.getElementById(errorId);
+        if (!errorEl) return;
+
+        errorEl.innerHTML = `<span class="field-error-icon" aria-hidden="true">⚠️</span><span>${message}</span>`;
+        errorEl.style.display = "flex";
+
+        if (fieldEl) {
+            if (fieldEl.type === "checkbox") {
+                const groupEl = document.getElementById("group-persetujuan");
+                if (groupEl) groupEl.classList.add("is-invalid");
+            } else {
+                fieldEl.classList.add("is-invalid");
+            }
+            fieldEl.setAttribute("aria-invalid", "true");
+        }
+    }
+
+    /**
+     * Helper untuk membersihkan pesan error inline pada field tertentu
+     */
+    function clearFieldError(fieldId, errorId) {
+        const fieldEl = document.getElementById(fieldId);
+        const errorEl = document.getElementById(errorId);
+        if (errorEl) {
+            errorEl.style.display = "none";
+            errorEl.innerHTML = "";
+        }
+        if (fieldEl) {
+            if (fieldEl.type === "checkbox") {
+                const groupEl = document.getElementById("group-persetujuan");
+                if (groupEl) groupEl.classList.remove("is-invalid");
+            } else {
+                fieldEl.classList.remove("is-invalid");
+            }
+            fieldEl.setAttribute("aria-invalid", "false");
+        }
+    }
+
+    /**
+     * Membersihkan seluruh pesan error dan styling invalid dari formulir
+     */
+    function clearAllErrors() {
+        const errorElements = formPeminjaman.querySelectorAll(".field-error");
+        errorElements.forEach((el) => {
+            el.style.display = "none";
+            el.innerHTML = "";
+        });
+
+        const invalidInputs = formPeminjaman.querySelectorAll(".is-invalid");
+        invalidInputs.forEach((el) => el.classList.remove("is-invalid"));
+
+        const allInputs = formPeminjaman.querySelectorAll("input, select, textarea");
+        allInputs.forEach((el) => el.setAttribute("aria-invalid", "false"));
+
+        if (formAlert) {
+            formAlert.style.display = "none";
+            formAlert.innerHTML = "";
+            formAlert.className = "form-alert";
+        }
+    }
+
+    /**
+     * Evaluasi aturan validasi untuk satu field secara spesifik
+     * @param {string} fieldId
+     * @returns {string|null} Pesan error jika tidak valid, atau null jika lolos
+     */
+    function checkFieldRule(fieldId) {
+        const el = document.getElementById(fieldId);
+        if (!el) return null;
+
+        const val = el.value ? el.value.trim() : "";
+
+        switch (fieldId) {
+            // Aturan 1: Nama Lengkap minimal 3 karakter huruf
+            case "form-nama":
+                if (!val) return "Nama lengkap pemohon wajib diisi.";
+                if (val.length < 3) return "Nama lengkap minimal terdiri dari 3 karakter.";
+                if (!/^[a-zA-Z\s'.]+$/.test(val)) return "Nama lengkap hanya boleh mengandung huruf, spasi, dan tanda kutip.";
+                return null;
+
+            // Aturan 2: Judul agenda melaut minimal 5 karakter
+            case "form-judul":
+                if (!val) return "Judul atau nama agenda melaut wajib diisi.";
+                if (val.length < 5) return "Judul agenda melaut minimal terdiri dari 5 karakter.";
+                return null;
+
+            // Aturan 3: Format email valid
+            case "form-email":
+                if (!val) return "Alamat email aktif wajib diisi.";
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return "Format alamat email tidak valid (contoh: nelayan@sentrapesisir.id).";
+                return null;
+
+            // Aturan 4: Nomor telepon / WhatsApp valid (format Indonesia)
+            case "form-telepon":
+                if (!val) return "Nomor telepon / WhatsApp wajib diisi.";
+                // Menolak jika kurang dari 10 digit atau tidak diawali 08 / 62
+                const sanitizedPhone = val.replace(/[\s-]/g, "");
+                if (!/^(?:\+62|62|0)8[1-9][0-9]{7,11}$/.test(sanitizedPhone)) {
+                    return "Nomor telepon tidak valid (minimal 10 digit angka, diawali 08 atau 62).";
+                }
+                return null;
+
+            // Aturan 5: Pilihan Kategori Peralatan wajib dipilih
+            case "form-kategori":
+                if (!val) return "Silakan pilih salah satu kategori peralatan yang dibutuhkan.";
+                return null;
+
+            // Aturan 5b: Pilihan Pos Dermaga Pengambilan wajib dipilih
+            case "form-lokasi":
+                if (!val) return "Silakan pilih pos dermaga sentra pengambilan alat.";
+                return null;
+
+            // Aturan 6: Jumlah Unit harus angka antara 1 sampai 10
+            case "form-jumlah":
+                const num = Number(val);
+                if (!val || isNaN(num)) return "Jumlah unit wajib diisi dengan angka.";
+                if (num < 1 || num > 10) return "Jumlah unit permohonan dibatasi antara 1 hingga 10 unit.";
+                return null;
+
+            // Aturan 7a: Tanggal pinjam minimal hari ini
+            case "form-tgl-pinjam":
+                if (!val) return "Tanggal mulai peminjaman wajib diisi.";
+                const tglMulai = new Date(val);
+                const tglSekarang = new Date();
+                tglSekarang.setHours(0, 0, 0, 0);
+                if (tglMulai < tglSekarang) return "Tanggal mulai peminjaman tidak boleh di masa lalu.";
+                return null;
+
+            // Aturan 7b: Tanggal kembali tidak boleh sebelum tanggal pinjam & maks 7 hari
+            case "form-tgl-kembali":
+                if (!val) return "Rencana tanggal kembali wajib diisi.";
+                const inputMulai = document.getElementById("form-tgl-pinjam");
+                if (inputMulai && inputMulai.value) {
+                    const start = new Date(inputMulai.value);
+                    const end = new Date(val);
+                    if (end < start) return "Tanggal kembali tidak boleh sebelum tanggal mulai peminjaman.";
+                    const selisihHari = Math.round((end - start) / (1000 * 60 * 60 * 24));
+                    if (selisihHari > 7) return `Maksimal durasi peminjaman adalah 7 hari kerja (durasi dipilih: ${selisihHari} hari).`;
+                }
+                return null;
+
+            // Aturan 8: Deskripsi Keperluan minimal 15 karakter
+            case "form-deskripsi":
+                if (!val) return "Deskripsi keperluan dan wilayah tangkap wajib diisi.";
+                if (val.length < 15) return `Deskripsi minimal 15 karakter untuk kejelasan logistik (saat ini: ${val.length} karakter).`;
+                return null;
+
+            // Aturan 9: Checkbox persetujuan wajib dicentang
+            case "form-persetujuan":
+                if (!el.checked) return "Anda harus menyetujui pernyataan komitmen pemeliharaan alat.";
+                return null;
+
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Memvalidasi satu field secara real-time dan memperbarui tampilan inline error
+     */
+    function validateSingleField(fieldId) {
+        const errorMap = {
+            "form-nama": { errorId: "error-nama", label: "Nama Lengkap Pemohon" },
+            "form-judul": { errorId: "error-judul", label: "Judul Agenda Melaut" },
+            "form-email": { errorId: "error-email", label: "Alamat Email" },
+            "form-telepon": { errorId: "error-telepon", label: "Nomor Telepon / WA" },
+            "form-kategori": { errorId: "error-kategori", label: "Kategori Peralatan" },
+            "form-lokasi": { errorId: "error-lokasi", label: "Pos Sentra Pengambilan" },
+            "form-jumlah": { errorId: "error-jumlah", label: "Jumlah Unit" },
+            "form-tgl-pinjam": { errorId: "error-tgl-pinjam", label: "Tanggal Mulai" },
+            "form-tgl-kembali": { errorId: "error-tgl-kembali", label: "Rencana Tanggal Kembali" },
+            "form-deskripsi": { errorId: "error-deskripsi", label: "Deskripsi Keperluan" },
+            "form-persetujuan": { errorId: "error-persetujuan", label: "Pernyataan Persetujuan" }
+        };
+
+        const config = errorMap[fieldId];
+        if (!config) return true;
+
+        const errorMsg = checkFieldRule(fieldId);
+        if (errorMsg) {
+            setFieldError(fieldId, config.errorId, errorMsg);
+            return false;
+        } else {
+            clearFieldError(fieldId, config.errorId);
+            return true;
+        }
+    }
+
+    // Registrasi real-time feedback (input / change) untuk multi-channel feedback
+    const fieldsToWatch = [
+        "form-nama",
+        "form-judul",
+        "form-email",
+        "form-telepon",
+        "form-kategori",
+        "form-lokasi",
+        "form-jumlah",
+        "form-tgl-pinjam",
+        "form-tgl-kembali",
+        "form-deskripsi",
+        "form-persetujuan"
+    ];
+
+    fieldsToWatch.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const eventType = el.tagName === "SELECT" || el.type === "checkbox" || el.type === "date" ? "change" : "input";
+        el.addEventListener(eventType, () => {
+            validateSingleField(id);
+        });
+    });
+
+    /**
+     * Memvalidasi seluruh formulir dan mengembalikan daftar kesalahan
+     */
+    function validateCompleteForm() {
+        const errorDefs = [
+            { fieldId: "form-nama", errorId: "error-nama", label: "Nama Lengkap Pemohon" },
+            { fieldId: "form-judul", errorId: "error-judul", label: "Judul Agenda Melaut" },
+            { fieldId: "form-email", errorId: "error-email", label: "Alamat Email" },
+            { fieldId: "form-telepon", errorId: "error-telepon", label: "Nomor Telepon / WhatsApp" },
+            { fieldId: "form-kategori", errorId: "error-kategori", label: "Kategori Peralatan" },
+            { fieldId: "form-lokasi", errorId: "error-lokasi", label: "Pos Sentra Pengambilan" },
+            { fieldId: "form-jumlah", errorId: "error-jumlah", label: "Jumlah Unit" },
+            { fieldId: "form-tgl-pinjam", errorId: "error-tgl-pinjam", label: "Tanggal Mulai Peminjaman" },
+            { fieldId: "form-tgl-kembali", errorId: "error-tgl-kembali", label: "Rencana Tanggal Kembali" },
+            { fieldId: "form-deskripsi", errorId: "error-deskripsi", label: "Deskripsi Keperluan" },
+            { fieldId: "form-persetujuan", errorId: "error-persetujuan", label: "Pernyataan Persetujuan" }
+        ];
+
+        const errors = [];
+
+        errorDefs.forEach(({ fieldId, errorId, label }) => {
+            const errorMsg = checkFieldRule(fieldId);
+            if (errorMsg) {
+                setFieldError(fieldId, errorId, errorMsg);
+                errors.push({ fieldId, errorId, label, message: errorMsg });
+            } else {
+                clearFieldError(fieldId, errorId);
+            }
+        });
+
+        return errors;
+    }
+
+    /**
+     * Tampilkan Error Summary di atas form dengan link navigasi ke masing-masing field
+     */
+    function renderErrorSummary(errors) {
+        if (!formAlert) return;
+
+        formAlert.className = "form-alert alert-error";
+        formAlert.style.display = "block";
+        formAlert.setAttribute("tabindex", "-1");
+
+        formAlert.innerHTML = `
+            <div class="alert-title">
+                <span aria-hidden="true">⚠️</span>
+                <span>Terdapat ${errors.length} Kesalahan Pengisian Formulir</span>
+            </div>
+            <p class="error-summary-lead">Silakan periksa dan perbaiki kolom-kolom berikut sebelum mengajukan permohonan:</p>
+            <ol class="error-summary-list">
+                ${errors
+                    .map(
+                        (err) => `
+                    <li>
+                        <a href="#${err.fieldId}" data-error-target="${err.fieldId}">
+                            <strong>${err.label}</strong>: ${err.message}
+                        </a>
+                    </li>
+                `
+                    )
+                    .join("")}
+            </ol>
+        `;
+    }
+
+    // Event listener navigasi klik dari link error summary langsung ke field bersangkutan
+    if (formAlert) {
+        formAlert.addEventListener("click", (event) => {
+            const link = event.target.closest("a[data-error-target]");
+            if (link) {
+                event.preventDefault();
+                const targetId = link.dataset.errorTarget;
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.focus();
+                    targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            }
         });
     }
 
-    // 2. Handler submit dengan validasi aksesibel & pengumuman status
+    // 2. Handler submit dengan validasi komprehensif (Error Summary, Inline Error, & Focus Pertama)
     formPeminjaman.addEventListener("submit", (event) => {
         event.preventDefault();
 
-        // Validasi HTML5 Constraint Validation
-        if (!formPeminjaman.checkValidity()) {
-            const firstInvalid = formPeminjaman.querySelector(":invalid");
-            
-            if (formAlert) {
-                formAlert.className = "form-alert alert-error";
-                formAlert.style.display = "block";
-                formAlert.innerHTML = `
-                    <div class="alert-title">
-                        <span aria-hidden="true">⚠️</span>
-                        <span>Formulir Belum Lengkap</span>
-                    </div>
-                    <p>Mohon periksa kembali kolom yang bertanda bintang merah (*). Pastikan seluruh informasi telah diisi dengan benar sebelum mengirimkan permohonan.</p>
-                `;
-                formAlert.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            }
+        // Validasi seluruh aturan
+        const errors = validateCompleteForm();
 
-            if (firstInvalid) {
-                firstInvalid.focus();
+        // Jika terdapat kesalahan validasi
+        if (errors.length > 0) {
+            // A. Tampilkan Error Summary di atas form
+            renderErrorSummary(errors);
+
+            // B. Fokuskan kursor ke error pertama (WCAG Guideline)
+            const firstError = errors[0];
+            const firstInvalidElement = document.getElementById(firstError.fieldId);
+            if (firstInvalidElement) {
+                firstInvalidElement.focus();
+                firstInvalidElement.scrollIntoView({ behavior: "smooth", block: "center" });
             }
             return;
         }
 
-        // Ambil data formulir jika valid
+        // Jika seluruh validasi lolos, ambil data formulir
         const formData = new FormData(formPeminjaman);
         const data = {
             nama: formData.get("nama") || "-",
@@ -458,16 +759,15 @@ if (formPeminjaman) {
 
         // Reset nilai formulir setelah sukses
         formPeminjaman.reset();
+        clearAllErrors();
         if (inputTglPinjam) inputTglPinjam.value = today;
     });
 
     // 3. Handler reset formulir
     if (btnResetPeminjaman) {
         btnResetPeminjaman.addEventListener("click", () => {
-            if (formAlert) {
-                formAlert.style.display = "none";
-                formAlert.innerHTML = "";
-            }
+            clearAllErrors();
+            if (inputTglPinjam) inputTglPinjam.value = today;
         });
     }
 
@@ -499,6 +799,7 @@ if (formPeminjaman) {
         }
     }
 }
+
 
 
 

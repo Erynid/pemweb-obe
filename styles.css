@@ -979,14 +979,46 @@ section>p {
 /* Invalid state feedback */
 .form-group input:user-invalid,
 .form-group select:user-invalid,
-.form-group textarea:user-invalid {
-  border-color: #f43f5e;
+.form-group textarea:user-invalid,
+.form-group input.is-invalid,
+.form-group select.is-invalid,
+.form-group textarea.is-invalid {
+  border-color: #dc2626 !important;
+  background-color: #fffafb;
 }
 
 .form-group input:user-invalid:focus,
 .form-group select:user-invalid:focus,
-.form-group textarea:user-invalid:focus {
-  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25);
+.form-group textarea:user-invalid:focus,
+.form-group input.is-invalid:focus,
+.form-group select.is-invalid:focus,
+.form-group textarea.is-invalid:focus {
+  border-color: #b91c1c !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.25) !important;
+  outline: none;
+}
+
+.form-checkbox-group.is-invalid {
+  border-color: #dc2626 !important;
+  background-color: #fef2f2;
+}
+
+/* Pesan Error Dekat Field (Field Error) */
+.field-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #b91c1c;
+  margin-top: 0.3rem;
+  line-height: 1.4;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.field-error-icon {
+  flex-shrink: 0;
+  font-size: 0.85rem;
 }
 
 .form-group textarea {
@@ -1105,8 +1137,40 @@ section>p {
 
 .alert-error {
   background-color: #fef2f2;
-  border: 1px solid #fca5a5;
+  border: 1.5px solid #fca5a5;
   color: #991b1b;
+}
+
+.error-summary-lead {
+  font-size: 0.925rem;
+  margin-top: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+  color: #7f1d1d;
+  font-weight: 500;
+}
+
+.error-summary-list {
+  margin: var(--spacing-xs) 0 0 1.25rem;
+  padding: 0;
+}
+
+.error-summary-list li {
+  margin-bottom: 0.35rem;
+  line-height: 1.45;
+}
+
+.error-summary-list a {
+  color: #991b1b;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition-fast);
+}
+
+.error-summary-list a:hover,
+.error-summary-list a:focus-visible {
+  color: #450a0a;
+  text-decoration-thickness: 2px;
 }
 
 .alert-title {

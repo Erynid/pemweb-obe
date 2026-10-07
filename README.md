@@ -62,6 +62,11 @@
   - Implementasi formulir permohonan peminjaman alat sentra pesisir terpadu berbasis kebutuhan riil nelayan/warga.
   - Kelengkapan field standar: Nama/Judul, Email/Kontak, Kategori/Pilihan, Angka/Tanggal, Deskripsi/Catatan, dan Checkbox Persetujuan.
   - Aksesibilitas tingkat tinggi (WCAG 2.1): fieldset/legend, label eksplisit, aria-describedby, aria-required, aria-live status alert, autofokus error pertama, serta keyboard focus ring (:focus-visible).
+- [x] **Membaca & Menganalisis Endpoint API (Pertemuan 7 — Latihan 1)**:
+  - Penyediaan endpoint data JSON lokal `data/inventaris.json` melalui server web Apache Laragon.
+  - Dokumentasi struktur HTTP (Method `GET`, URL, Status Code `200 OK`, `Content-Type: application/json`).
+  - Pemetaan skema data response JSON dan identifikasi field yang dirender ke antarmuka kartu & dialog modal.
+  - Prosedur inspeksi jaringan melalui browser Developer Tools (Tab Network & Response).
 
 ---
 
@@ -134,9 +139,76 @@ Penerapan aksesibilitas formulir ini mengikuti prinsip WCAG 2.1 Level AA:
 
 ---
 
+## Pertemuan 7 — Latihan 1: Membaca Endpoint API
+
+### 1. Tujuan Praktikum
+Memahami struktur, method HTTP, format URL, kode status, dan skema respons dari endpoint API/JSON sebelum menuliskan kode JavaScript asinkron (`fetch`), guna memastikan pemetaan field yang tepat pada komponen antarmuka yang akan dirender.
+
+### 2. Catatan Analisis Endpoint (Sesuai Format Latihan)
+
+```text
+Method   : GET
+URL      : http://localhost/pemweb-obe/data/inventaris.json
+Status   : 200 OK
+Data     : id, nama, kategori, jumlah, kondisi, lokasi
+Dipakai  : nama + kategori + kondisi untuk card; id + jumlah + lokasi untuk modal detail
+```
+
+| Komponen Analisis | Keterangan / Nilai |
+|---|---|
+| **Method** | `GET` |
+| **URL** | `http://localhost/pemweb-obe/data/inventaris.json` *(atau path relatif `data/inventaris.json`)* |
+| **Status Code** | `200 OK` (HTTP/1.1 200 OK) |
+| **Content-Type** | `application/json` |
+| **Bentuk Response** | JSON Array of Objects (`[ { ... }, { ... } ]`) |
+| **Daftar Field Data** | `id`, `nama`, `kategori`, `jumlah`, `kondisi`, `lokasi` |
+| **Field yang Dirender (Dipakai)** | **Kartu Inventaris**: `nama`, `kategori`, `kondisi` (badge status), `jumlah`, `lokasi`<br>**Modal Detail**: `id` (#INV-00X), `nama`, `kategori`, `jumlah`, `kondisi`, `lokasi` |
+
+### 3. Struktur Field & Contoh Data Respons
+
+```json
+[
+  {
+    "id": 1,
+    "nama": "Jaring Insang (Gillnet)",
+    "kategori": "Alat Tangkap",
+    "jumlah": 15,
+    "kondisi": "Baik",
+    "lokasi": "Dermaga Barat"
+  }
+]
+```
+
+- `id` (*Number*): Nomor identitas unik unit inventaris.
+- `nama` (*String*): Nama sarana maritim/alat pesisir (dipakai sebagai judul kartu inventaris).
+- `kategori` (*String*): Kelompok sarana kerja pesisir (Alat Tangkap, Navigasi, Mesin Kapal, Penyimpanan, Keselamatan).
+- `jumlah` (*Number*): Jumlah ketersediaan unit fisik di pos sentra.
+- `kondisi` (*String*): Status kelaikan operasional alat (*Baik*, *Perlu Servis*, *Rusak*) — dipakai untuk badge penanda kondisi.
+- `lokasi` (*String*): Pos sentra penempatan unit (Dermaga Barat, Dermaga Timur, Pos Pengawas, Bengkel Sentral).
+
+### 4. Panduan Inspeksi DevTools & Uji Coba Jaringan
+
+1. **Pengujian melalui Browser & Developer Tools (Tab Network)**:
+   - Akses URL: `http://localhost/pemweb-obe/data/inventaris.json` di browser.
+   - Buka **DevTools** (`F12` atau klik kanan &rarr; *Inspect* &rarr; pilih tab **Network**).
+   - Muat ulang halaman (`F5` / `Ctrl + R`).
+   - Klik request `inventaris.json`:
+     - **Headers**: Periksa *Request Method: GET*, *Status Code: 200 OK*, dan *Content-Type: application/json*.
+     - **Response / Preview**: Periksa payload array objek JSON yang terformat rapi.
+   - Ambil screenshot pada tab **Network** dan tab **Response** sesuai instruksi slide.
+2. **Pengujian melalui cURL / REST Client**:
+   ```bash
+   curl -i http://localhost/pemweb-obe/data/inventaris.json
+   ```
+
+---
+
 ## Struktur Direktori Proyek
 ```text
 pemweb-obe/
+│
+├── data/
+│   └── inventaris.json                     # Endpoint data JSON lokal (Pertemuan 7 Latihan 1)
 │
 ├── images/
 │   ├── ilustrasi-notif.png                 # Aset gambar notifikasi

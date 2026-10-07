@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "nama": "Jaring Insang (Gillnet)",
+    "kategori": "Alat Tangkap",
+    "jumlah": 15,
+    "kondisi": "Baik",
+    "lokasi": "Dermaga Barat"
+  },
+  {
+    "id": 2,
+    "nama": "GPS Navigasi Laut",
+    "kategori": "Navigasi",
+    "jumlah": 5,
+    "kondisi": "Baik",
+    "lokasi": "Pos Pengawas"
+  },
+  {
+    "id": 3,
+    "nama": "Mesin Tempel 15 PK",
+    "kategori": "Mesin Kapal",
+    "jumlah": 3,
+    "kondisi": "Perlu Servis",
+    "lokasi": "Bengkel Sentral"
+  },
+  {
+    "id": 4,
+    "nama": "Coolbox Penyimpanan Ikan 200L",
+    "kategori": "Penyimpanan",
+    "jumlah": 20,
+    "kondisi": "Baik",
+    "lokasi": "Dermaga Barat"
+  },
+  {
+    "id": 5,
+    "nama": "Rompi Pelampung (Life Jacket)",
+    "kategori": "Keselamatan",
+    "jumlah": 30,
+    "kondisi": "Baik",
+    "lokasi": "Dermaga Timur"
+  },
+  {
+    "id": 6,
+    "nama": "Fishfinder Sonar",
+    "kategori": "Navigasi",
+    "jumlah": 2,
+    "kondisi": "Rusak",
+    "lokasi": "Pos Pengawas"
+  },
+  {
+    "id": 7,
+    "nama": "Jangkar Lipat Galvanis",
+    "kategori": "Alat Tangkap",
+    "jumlah": 8,
+    "kondisi": "Baik",
+    "lokasi": "Dermaga Barat"
+  },
+  {
+    "id": 8,
+    "nama": "Radio Komunikasi VHF Marine",
+    "kategori": "Navigasi",
+    "jumlah": 6,
+    "kondisi": "Baik",
+    "lokasi": "Pos Pengawas"
+  },
+  {
+    "id": 9,
+    "nama": "Lampu Badai Solar Sel",
+    "kategori": "Keselamatan",
+    "jumlah": 18,
+    "kondisi": "Baik",
+    "lokasi": "Pos Pengawas"
+  },
+  {
+    "id": 10,
+    "nama": "Timbangan Gantung Ikan 100kg",
+    "kategori": "Penyimpanan",
+    "jumlah": 4,
+    "kondisi": "Perlu Servis",
+    "lokasi": "Dermaga Timur"
+  }
+]

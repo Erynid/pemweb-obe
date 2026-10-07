@@ -119,7 +119,9 @@
                   aria-required="true"
                   autocomplete="name"
                   placeholder="Contoh: Muhammad Dzakir Dzakwan"
+                  aria-describedby="error-nama"
                 >
+                <p id="error-nama" class="field-error" role="alert" style="display: none;"></p>
               </div>
 
               <div class="form-group">
@@ -134,7 +136,9 @@
                   required
                   aria-required="true"
                   placeholder="Contoh: Operasi Penangkapan Ikan Musim Timur"
+                  aria-describedby="error-judul"
                 >
+                <p id="error-judul" class="field-error" role="alert" style="display: none;"></p>
               </div>
             </div>
 
@@ -152,7 +156,9 @@
                   aria-required="true"
                   autocomplete="email"
                   placeholder="dzakir@contoh.id"
+                  aria-describedby="error-email"
                 >
+                <p id="error-email" class="field-error" role="alert" style="display: none;"></p>
               </div>
 
               <div class="form-group">
@@ -168,9 +174,10 @@
                   aria-required="true"
                   autocomplete="tel"
                   placeholder="081234567890"
-                  aria-describedby="telepon-hint"
+                  aria-describedby="telepon-hint error-telepon"
                 >
                 <p id="telepon-hint" class="field-hint">Pastikan nomor aktif untuk konfirmasi ketersediaan alat oleh petugas sentra.</p>
+                <p id="error-telepon" class="field-error" role="alert" style="display: none;"></p>
               </div>
             </div>
           </fieldset>
@@ -188,7 +195,7 @@
                   Kategori Peralatan
                   <span class="required-indicator" aria-hidden="true">*</span>
                 </label>
-                <select id="form-kategori" name="kategori" required aria-required="true">
+                <select id="form-kategori" name="kategori" required aria-required="true" aria-describedby="error-kategori">
                   <option value="" disabled selected>-- Pilih Kategori Peralatan --</option>
                   <option value="Alat Tangkap">Alat Tangkap (Jaring Insang, Jangkar Lipat)</option>
                   <option value="Navigasi">Navigasi & Komunikasi (GPS Navigasi, Fishfinder, Radio VHF)</option>
@@ -196,6 +203,7 @@
                   <option value="Penyimpanan">Penyimpanan Hasil Laut (Coolbox 200L, Timbangan Gantung)</option>
                   <option value="Keselamatan">Keselamatan Pelayaran (Life Jacket, Lampu Badai Solar)</option>
                 </select>
+                <p id="error-kategori" class="field-error" role="alert" style="display: none;"></p>
               </div>
 
               <div class="form-group">
@@ -203,13 +211,14 @@
                   Pos Sentra Pengambilan
                   <span class="required-indicator" aria-hidden="true">*</span>
                 </label>
-                <select id="form-lokasi" name="lokasi" required aria-required="true">
+                <select id="form-lokasi" name="lokasi" required aria-required="true" aria-describedby="error-lokasi">
                   <option value="" disabled selected>-- Pilih Pos Dermaga --</option>
                   <option value="Dermaga Barat">Dermaga Barat (Sentra Utama Tangkap)</option>
                   <option value="Dermaga Timur">Dermaga Timur (Penyimpanan & Timbangan)</option>
                   <option value="Pos Pengawas">Pos Pengawas (Navigasi & Keselamatan)</option>
                   <option value="Bengkel Sentral">Bengkel Sentral (Mesin & Mekanikal)</option>
                 </select>
+                <p id="error-lokasi" class="field-error" role="alert" style="display: none;"></p>
               </div>
             </div>
 
@@ -228,9 +237,10 @@
                   value="1"
                   required
                   aria-required="true"
-                  aria-describedby="jumlah-hint"
+                  aria-describedby="jumlah-hint error-jumlah"
                 >
                 <p id="jumlah-hint" class="field-hint">Maksimal 10 unit per armada melaut.</p>
+                <p id="error-jumlah" class="field-error" role="alert" style="display: none;"></p>
               </div>
 
               <div class="form-group">
@@ -244,7 +254,9 @@
                   name="tgl_pinjam"
                   required
                   aria-required="true"
+                  aria-describedby="error-tgl-pinjam"
                 >
+                <p id="error-tgl-pinjam" class="field-error" role="alert" style="display: none;"></p>
               </div>
 
               <div class="form-group">
@@ -258,9 +270,10 @@
                   name="tgl_kembali"
                   required
                   aria-required="true"
-                  aria-describedby="tgl-hint"
+                  aria-describedby="tgl-hint error-tgl-kembali"
                 >
                 <p id="tgl-hint" class="field-hint">Batas waktu maksimal 7 hari kerja.</p>
+                <p id="error-tgl-kembali" class="field-error" role="alert" style="display: none;"></p>
               </div>
             </div>
           </fieldset>
@@ -284,24 +297,27 @@
                 required
                 aria-required="true"
                 placeholder="Tuliskan estimasi koordinat/wilayah perairan melaut, rincian ABK kapal, serta kebutuhan spesifik alat..."
-                aria-describedby="deskripsi-hint"
+                aria-describedby="deskripsi-hint error-deskripsi"
               ></textarea>
               <p id="deskripsi-hint" class="field-hint">Minimal 15 karakter untuk kejelasan pencatatan logistik sentra maritim.</p>
+              <p id="error-deskripsi" class="field-error" role="alert" style="display: none;"></p>
             </div>
 
-            <div class="form-checkbox-group">
+            <div class="form-checkbox-group" id="group-persetujuan">
               <input
                 type="checkbox"
                 id="form-persetujuan"
                 name="persetujuan"
                 required
                 aria-required="true"
+                aria-describedby="error-persetujuan"
               >
               <label for="form-persetujuan" class="checkbox-label">
                 Saya menyatakan data di atas benar, berkomitmen menjaga keutuhan peralatan inventaris, dan bersedia mematuhi seluruh peraturan serta mengembalikan sarana tepat waktu sesuai ketentuan Sentra Pesisir.
                 <span class="required-indicator" aria-hidden="true">*</span>
               </label>
             </div>
+            <p id="error-persetujuan" class="field-error" role="alert" style="display: none;"></p>
           </fieldset>
 
           <!-- Action Buttons -->
@@ -341,187 +357,8 @@
     <p>&copy; 2026 Portal Komunitas Pesisir. Praktikum Pemrograman Web OBE.</p>
   </footer>
 
-  <!-- Main JavaScript ES Module (aktif ketika dijalankan via Laragon / Web Server) -->
+  <!-- Main JavaScript ES Module -->
   <script type="module" src="js/app.js?v=2.2"></script>
-
-  <!-- Fallback otomatis jika dibuka langsung via protokol file:/// (karena browser memblokir ES Module secara lokal) -->
-  <script>
-    (function () {
-      function initFallback() {
-        const list = document.querySelector("#inventaris-list");
-        const searchInput = document.querySelector("#search");
-        const limitSelect = document.querySelector("#limit");
-        // Jika modul ES sudah berhasil merender kartu inventaris, keluar
-        if (!list || list.children.length > 0) return;
-
-        const dataInventaris = [
-          { id: 1, nama: "Jaring Insang (Gillnet)", kategori: "Alat Tangkap", jumlah: 15, kondisi: "Baik", lokasi: "Dermaga Barat" },
-          { id: 2, nama: "GPS Navigasi Laut", kategori: "Navigasi", jumlah: 5, kondisi: "Baik", lokasi: "Pos Pengawas" },
-          { id: 3, nama: "Mesin Tempel 15 PK", kategori: "Mesin Kapal", jumlah: 3, kondisi: "Perlu Servis", lokasi: "Bengkel Sentral" },
-          { id: 4, nama: "Coolbox Penyimpanan Ikan 200L", kategori: "Penyimpanan", jumlah: 20, kondisi: "Baik", lokasi: "Dermaga Barat" },
-          { id: 5, nama: "Rompi Pelampung (Life Jacket)", kategori: "Keselamatan", jumlah: 30, kondisi: "Baik", lokasi: "Dermaga Timur" },
-          { id: 6, nama: "Fishfinder Sonar", kategori: "Navigasi", jumlah: 2, kondisi: "Rusak", lokasi: "Pos Pengawas" },
-          { id: 7, nama: "Jangkar Lipat Galvanis", kategori: "Alat Tangkap", jumlah: 8, kondisi: "Baik", lokasi: "Dermaga Barat" },
-          { id: 8, nama: "Radio Komunikasi VHF Marine", kategori: "Navigasi", jumlah: 6, kondisi: "Baik", lokasi: "Pos Pengawas" },
-          { id: 9, nama: "Lampu Badai Solar Sel", kategori: "Keselamatan", jumlah: 18, kondisi: "Baik", lokasi: "Pos Pengawas" },
-          { id: 10, nama: "Timbangan Gantung Ikan 100kg", kategori: "Penyimpanan", jumlah: 4, kondisi: "Perlu Servis", lokasi: "Dermaga Timur" }
-        ];
-
-        function renderFallback(items, keyword = "") {
-          if (items.length === 0) {
-            list.innerHTML = `
-              <div class="pesan-kosong" role="status">
-                <div class="pesan-kosong-ikon">🔍</div>
-                <h3>Alat Tidak Ditemukan</h3>
-                <p>Tidak ada alat inventaris yang cocok dengan kata kunci "<strong>${keyword}</strong>".</p>
-                <p class="pesan-kosong-saran">Saran: Periksa ejaan kata kunci atau coba cari dengan nama alat lain (misalnya: <em>Jaring</em>, <em>GPS</em>, <em>Mesin</em>).</p>
-              </div>
-            `;
-            return;
-          }
-
-          list.innerHTML = items.map(item => {
-            let badgeKondisiClass = "badge-kondisi-baik";
-            if (item.kondisi === "Perlu Servis") badgeKondisiClass = "badge-kondisi-servis";
-            else if (item.kondisi === "Rusak") badgeKondisiClass = "badge-kondisi-rusak";
-
-            return `
-              <article class="inventaris-card" data-id="${item.id}">
-                <div class="inventaris-card-header">
-                  <span class="badge-kategori">${item.kategori}</span>
-                  <span class="badge-kondisi ${badgeKondisiClass}">${item.kondisi}</span>
-                </div>
-                <h3 class="inventaris-card-title">${item.nama}</h3>
-                <div class="inventaris-card-details">
-                  <div class="detail-row">
-                    <span class="detail-label">Jumlah Unit:</span>
-                    <span class="detail-value"><strong>${item.jumlah}</strong> unit</span>
-                  </div>
-                  <div class="detail-row">
-                    <span class="detail-label">Lokasi:</span>
-                    <span class="detail-value">${item.lokasi}</span>
-                  </div>
-                </div>
-                <button type="button" class="btn-detail" data-detail="${item.id}">Detail</button>
-              </article>
-            `;
-          }).join("");
-        }
-
-        const fallbackUrlParams = new URLSearchParams(window.location.search);
-        const limitParam = fallbackUrlParams.get("limit");
-        if (limitParam) {
-          localStorage.setItem("limit", limitParam);
-        }
-
-        const savedLimit = localStorage.getItem("limit") ?? "5";
-        if (limitSelect) limitSelect.value = savedLimit;
-
-        function updateFallbackView(overrideKeyword = null) {
-          const raw = overrideKeyword !== null ? overrideKeyword : (searchInput ? searchInput.value : "");
-          const kw = raw.toLowerCase().trim();
-          const currentLimit = limitSelect ? Number(limitSelect.value) : 5;
-          const filtered = dataInventaris.filter(item => item.nama.toLowerCase().includes(kw));
-          renderFallback(filtered.slice(0, currentLimit), raw);
-        }
-
-        updateFallbackView();
-
-        if (limitSelect) {
-          limitSelect.addEventListener("change", () => {
-            localStorage.setItem("limit", limitSelect.value);
-            updateFallbackView();
-          });
-        }
-
-        // Event delegation untuk tombol detail pada fallback
-        list.addEventListener("click", (event) => {
-          const btn = event.target.closest("[data-detail]");
-          if (!btn) return;
-          const item = dataInventaris.find(d => d.id === Number(btn.dataset.detail));
-          if (!item) return;
-
-          const modal = document.querySelector("#detail-modal");
-          const content = document.querySelector("#modal-content");
-          if (!modal || !content) return;
-
-          let badgeKondisiClass = item.kondisi === "Perlu Servis" ? "badge-kondisi-servis" : (item.kondisi === "Rusak" ? "badge-kondisi-rusak" : "badge-kondisi-baik");
-          content.innerHTML = `
-            <div class="modal-detail-hero">
-              <span class="badge-kategori">${item.kategori}</span>
-              <h4>${item.nama}</h4>
-              <span class="badge-kondisi ${badgeKondisiClass}">${item.kondisi}</span>
-            </div>
-            <div class="modal-detail-grid">
-              <div class="modal-detail-item"><span class="modal-label">Kode Inventaris</span><span class="modal-value">#INV-00${item.id}</span></div>
-              <div class="modal-detail-item"><span class="modal-label">Kategori</span><span class="modal-value">${item.kategori}</span></div>
-              <div class="modal-detail-item"><span class="modal-label">Stok Tersedia</span><span class="modal-value"><strong>${item.jumlah}</strong> unit</span></div>
-              <div class="modal-detail-item"><span class="modal-label">Lokasi</span><span class="modal-value">${item.lokasi}</span></div>
-            </div>
-          `;
-          if (typeof modal.showModal === "function") modal.showModal();
-          else modal.setAttribute("open", "");
-        });
-
-        // Handler penutup modal dialog pada fallback
-        const closeBtn = document.querySelector("#btn-close-modal");
-        const footerCloseBtn = document.querySelector("#btn-footer-close");
-        const modalEl = document.querySelector("#detail-modal");
-        if (closeBtn) closeBtn.addEventListener("click", () => modalEl?.close());
-        if (footerCloseBtn) footerCloseBtn.addEventListener("click", () => modalEl?.close());
-        if (modalEl) modalEl.addEventListener("click", (e) => {
-          const r = modalEl.getBoundingClientRect();
-          if (e.clientY < r.top || e.clientY > r.top + r.height || e.clientX < r.left || e.clientX > r.left + r.width) modalEl.close();
-        });
-
-        if (searchInput) {
-          searchInput.addEventListener("input", (e) => {
-            updateFallbackView(e.target.value);
-          });
-
-          const urlParams = new URLSearchParams(window.location.search);
-          const queryParam = urlParams.get("q");
-          if (queryParam) {
-            searchInput.value = queryParam;
-            updateFallbackView(queryParam);
-          }
-
-          const detailParam = urlParams.get("detail");
-          if (detailParam) {
-            const item = dataInventaris.find(d => d.id === Number(detailParam));
-            if (item) {
-              const modal = document.querySelector("#detail-modal");
-              const content = document.querySelector("#modal-content");
-              if (modal && content) {
-                let badgeKondisiClass = item.kondisi === "Perlu Servis" ? "badge-kondisi-servis" : (item.kondisi === "Rusak" ? "badge-kondisi-rusak" : "badge-kondisi-baik");
-                content.innerHTML = `
-                  <div class="modal-detail-hero">
-                    <span class="badge-kategori">${item.kategori}</span>
-                    <h4>${item.nama}</h4>
-                    <span class="badge-kondisi ${badgeKondisiClass}">${item.kondisi}</span>
-                  </div>
-                  <div class="modal-detail-grid">
-                    <div class="modal-detail-item"><span class="modal-label">Kode Inventaris</span><span class="modal-value">#INV-00${item.id}</span></div>
-                    <div class="modal-detail-item"><span class="modal-label">Kategori</span><span class="modal-value">${item.kategori}</span></div>
-                    <div class="modal-detail-item"><span class="modal-label">Stok Tersedia</span><span class="modal-value"><strong>${item.jumlah}</strong> unit</span></div>
-                    <div class="modal-detail-item"><span class="modal-label">Lokasi</span><span class="modal-value">${item.lokasi}</span></div>
-                  </div>
-                `;
-                if (typeof modal.showModal === "function") modal.showModal();
-                else modal.setAttribute("open", "");
-              }
-            }
-          }
-        }
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => setTimeout(initFallback, 200));
-      } else {
-        setTimeout(initFallback, 200);
-      }
-    })();
-  </script>
 </body>
 
 </html>
