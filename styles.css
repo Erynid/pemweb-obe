@@ -486,6 +486,42 @@ section>p {
   outline: none;
 }
 
+/* Toolbar Uji Coba Latihan 3 */
+.test-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.btn-test-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-main);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-test-action:hover {
+  background-color: var(--color-bg-muted);
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-test-action:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
 /* Grid Inventaris */
 .inventaris-grid {
   display: grid;

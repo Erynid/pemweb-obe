@@ -402,12 +402,21 @@ function renderErrorState(errorMessage) {
 /**
  * Mengambil data inventaris secara asinkron dari endpoint API/JSON
  * @param {string} [url="./data/inventaris.json"] - URL endpoint yang akan diakses
+ * @param {number} [customDelay=null] - Waktu delay loading kustom dalam milidetik
  * @returns {Promise<Array<Object>>}
  */
-async function fetchItems(url = "./data/inventaris.json") {
-    // Delay dinamis agar transisi loading spinner terlihat halus dan mudah di-screenshot
+async function fetchItems(url = "./data/inventaris.json", customDelay = null) {
     const urlParams = new URLSearchParams(window.location.search);
-    const delayTime = urlParams.has("loading") ? 3000 : 350;
+
+    // Tentukan waktu tunggu: default 1200ms agar spinner selalu terlihat jelas oleh pengguna,
+    // atau 4000ms jika parameter ?loading=1 aktif untuk kemudahan screenshot
+    let delayTime = 1200;
+    if (customDelay !== null) {
+        delayTime = customDelay;
+    } else if (urlParams.has("loading")) {
+        delayTime = 4000;
+    }
+
     await new Promise((resolve) => setTimeout(resolve, delayTime));
 
     // Pengujian URL salah: jika terdapat parameter ?error=1 atau ?error=true
@@ -470,9 +479,28 @@ async function initDashboard() {
     }
 }
 
+// Tombol pengujian interaktif untuk memudahkan pengambilan screenshot
+const btnTestLoading = document.querySelector("#btn-test-loading");
+const btnTestError = document.querySelector("#btn-test-error");
+
+if (btnTestLoading) {
+    btnTestLoading.addEventListener("click", () => {
+        renderLoadingState();
+        setTimeout(() => {
+            initDashboard();
+        }, 3500);
+    });
+}
+
+if (btnTestError) {
+    btnTestError.addEventListener("click", () => {
+        renderErrorState("Simulasi Error 404: Endpoint './data/url_salah_items.json' tidak ditemukan di server.");
+    });
+}
+
 // Log informasi pengujian praktikum untuk kemudahan verifikasi
 console.log(
-    "%c[Praktikum Pertemuan 7]%c Buka ?error=1 untuk uji Error & Retry State, atau ?loading=1 untuk pause Loading Spinner.",
+    "%c[Praktikum Pertemuan 7]%c Gunakan tombol 'Uji Loading' atau 'Uji Error' di toolbar untuk demonstrasi instan.",
     "color: #0284c7; font-weight: bold;",
     "color: #475569;"
 );

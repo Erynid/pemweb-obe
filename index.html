@@ -13,7 +13,7 @@
     href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
     rel="stylesheet">
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=2.2">
+  <link rel="stylesheet" href="styles.css?v=2.3">
 </head>
 
 <body>
@@ -77,10 +77,23 @@
             <option value="20">20 item</option>
           </select>
         </div>
+
+        <div class="test-controls" aria-label="Kontrol Pengujian Praktikum 7">
+          <button type="button" id="btn-test-loading" class="btn-test-action" title="Uji Tampilan Loading Spinner">
+            <span aria-hidden="true">⏳</span> Uji Loading
+          </button>
+          <button type="button" id="btn-test-error" class="btn-test-action" title="Uji Tampilan Error 404 & Tombol Retry">
+            <span aria-hidden="true">⚠️</span> Uji Error
+          </button>
+        </div>
       </div>
 
       <div id="inventaris-list" class="inventaris-grid" aria-live="polite">
-        <!-- Konten inventaris akan dirender secara dinamis melalui JavaScript -->
+        <!-- Initial Loading State agar langsung tampil di browser sebelum JS fetch selesai -->
+        <div class="state-loading" role="status" aria-live="polite">
+          <div class="spinner"></div>
+          <p class="state-loading-text">Memuat data inventaris alat pesisir...</p>
+        </div>
       </div>
     </section>
 
@@ -358,7 +371,7 @@
   </footer>
 
   <!-- Main JavaScript ES Module -->
-  <script type="module" src="js/app.js?v=2.2"></script>
+  <script type="module" src="js/app.js?v=2.3"></script>
 </body>
 
 </html>
