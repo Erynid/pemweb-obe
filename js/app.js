@@ -6,8 +6,8 @@
 // 8. Import fungsi modular dari js/utils.js
 import { ringkasInventaris, filterAlatByLokasi, cariAlatById, formatRingkasanAlat } from "./utils.js";
 
-// Dataset Inventaris Alat & Fasilitas Pesisir (dengan properti lokasi)
-const inventaris = [
+// Dataset fallback cadangan jika koneksi lokal mengalami kendala
+const fallbackInventaris = [
     {
         id: 1,
         nama: "Jaring Insang (Gillnet)",
@@ -90,41 +90,47 @@ const inventaris = [
     },
 ];
 
-console.log("Portal Layanan Pesisir: Data inventaris berhasil dimuat.", inventaris);
+// Variable penampung data inventaris hasil Fetch API
+let inventaris = [];
 
-// 3. Filter alat dengan kondisi "Baik"
-const alatKondisiBaik = inventaris.filter((item) => item.kondisi === "Baik");
+/**
+ * Menjalankan analisis pengolahan data array inventaris di console (Pertemuan 4)
+ * @param {Array<Object>} data - Array data inventaris yang telah dimuat
+ */
+function jalankanAnalisisConsole(data) {
+    console.log("Portal Layanan Pesisir: Data inventaris berhasil dimuat via Fetch API.", data);
 
-console.log("Daftar Alat dengan Kondisi Baik:", alatKondisiBaik);
+    // 3. Filter alat dengan kondisi "Baik"
+    const alatKondisiBaik = data.filter((item) => item.kondisi === "Baik");
+    console.log("Daftar Alat dengan Kondisi Baik:", alatKondisiBaik);
 
-// 4. Map untuk menghasilkan array nama alat
-const daftarNamaAlat = inventaris.map((item) => item.nama);
+    // 4. Map untuk menghasilkan array nama alat
+    const daftarNamaAlat = data.map((item) => item.nama);
+    console.log("Daftar Nama Alat:", daftarNamaAlat);
 
-console.log("Daftar Nama Alat:", daftarNamaAlat);
+    // 5. Reduce untuk menghitung total jumlah alat
+    const totalJumlahAlat = data.reduce((total, item) => total + item.jumlah, 0);
+    console.log(`Total Jumlah Seluruh Alat Inventaris: ${totalJumlahAlat} unit`);
 
-// 5. Reduce untuk menghitung total jumlah alat
-const totalJumlahAlat = inventaris.reduce((total, item) => total + item.jumlah, 0);
+    // 8. Memanggil fungsi ringkasInventaris yang diimpor dari utils.js
+    const statistikInventaris = ringkasInventaris(data);
+    console.log("Ringkasan Statistik Inventaris (via utils.js):", statistikInventaris);
 
-console.log(`Total Jumlah Seluruh Alat Inventaris: ${totalJumlahAlat} unit`);
+    // Filter alat pada lokasi tertentu (misal: "Dermaga Barat")
+    const lokasiTarget = "Dermaga Barat";
+    const alatDiDermagaBarat = filterAlatByLokasi(data, lokasiTarget);
+    console.log(`Daftar Alat di lokasi '${lokasiTarget}':`, alatDiDermagaBarat);
 
-// 8. Memanggil fungsi ringkasInventaris yang diimpor dari utils.js
-const statistikInventaris = ringkasInventaris(inventaris);
-console.log("Ringkasan Statistik Inventaris (via utils.js):", statistikInventaris);
+    // Pencarian Alat Berdasarkan ID menggunakan find
+    const idTarget = 3;
+    const alatDitemukan = cariAlatById(data, idTarget);
+    console.log(`Pencarian Alat dengan ID ${idTarget}:`, alatDitemukan);
 
-// Filter alat pada lokasi tertentu (misal: "Dermaga Barat")
-const lokasiTarget = "Dermaga Barat";
-const alatDiDermagaBarat = filterAlatByLokasi(inventaris, lokasiTarget);
-console.log(`Daftar Alat di lokasi '${lokasiTarget}':`, alatDiDermagaBarat);
-
-// Pencarian Alat Berdasarkan ID menggunakan find
-const idTarget = 3;
-const alatDitemukan = cariAlatById(inventaris, idTarget);
-console.log(`Pencarian Alat dengan ID ${idTarget}:`, alatDitemukan);
-
-// Destructuring & Template Literal: Ringkasan setiap alat
-console.log("\n--- Ringkasan Format Teks Setiap Alat ---");
-const daftarRingkasanTeks = inventaris.map(formatRingkasanAlat);
-daftarRingkasanTeks.forEach((ringkasan) => console.log(ringkasan));
+    // Destructuring & Template Literal: Ringkasan setiap alat
+    console.log("\n--- Ringkasan Format Teks Setiap Alat ---");
+    const daftarRingkasanTeks = data.map(formatRingkasanAlat);
+    daftarRingkasanTeks.forEach((ringkasan) => console.log(ringkasan));
+}
 
 /* ==========================================================================
    Latihan Praktikum 1: Pencarian Real-Time & Render Inventaris
@@ -197,7 +203,8 @@ if (limitQueryParam) {
     localStorage.setItem("limit", limitQueryParam);
 }
 if (limit) {
-    limit.value = localStorage.getItem("limit") ?? "5";
+    const savedLimit = localStorage.getItem("limit");
+    limit.value = (savedLimit && Number(savedLimit) >= 6) ? savedLimit : "6";
 }
 
 /**
@@ -207,7 +214,7 @@ if (limit) {
 function updateInventarisView(keywordOverride = null) {
     const rawKeyword = keywordOverride !== null ? keywordOverride : (search ? search.value : "");
     const keyword = rawKeyword.toLowerCase().trim();
-    const currentLimit = limit ? Number(limit.value) : 5;
+    const currentLimit = limit ? Number(limit.value) : 6;
 
     const filtered = inventaris.filter((item) =>
         item.nama.toLowerCase().includes(keyword)
@@ -216,9 +223,6 @@ function updateInventarisView(keywordOverride = null) {
     // Potong array sesuai preferensi limit tersimpan di localStorage
     renderItems(filtered.slice(0, currentLimit), rawKeyword);
 }
-
-// Render data awal inventaris sesuai preferensi limit tersimpan
-updateInventarisView();
 
 // Event listener perubahan preferensi limit
 if (limit) {
@@ -233,14 +237,6 @@ if (search) {
     search.addEventListener("input", (event) => {
         updateInventarisView(event.target.value);
     });
-
-    // Otomatis sinkronisasi jika terdapat parameter ?q= di URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const queryParam = urlParams.get("q");
-    if (queryParam) {
-        search.value = queryParam;
-        updateInventarisView(queryParam);
-    }
 }
 
 /* ==========================================================================
@@ -350,6 +346,80 @@ if (detailModal) {
         }
     }
 }
+
+/* ==========================================================================
+   Pertemuan 7 — Latihan 2: Fetch dan Render
+   Tujuan: Data API tampil di halaman proyek, bukan hanya di Console.
+   ========================================================================== */
+
+/**
+ * Mengambil data inventaris secara asinkron dari endpoint API/JSON
+ * @returns {Promise<Array<Object>>}
+ */
+async function fetchItems() {
+    const response = await fetch('./data/inventaris.json');
+    if (!response.ok) throw new Error('Gagal ambil data');
+    return await response.json();
+}
+
+/**
+ * Inisialisasi dashboard, mengambil data via fetchItems, dan merender ke DOM
+ */
+async function initDashboard() {
+    try {
+        const items = await fetchItems();
+        inventaris = Array.isArray(items) ? items : [];
+
+        // Menjalankan analisis data di console (Pertemuan 4)
+        jalankanAnalisisConsole(inventaris);
+
+        // Baca preferensi limit tersimpan (minimal 6 item tampil sesuai kriteria praktikum)
+        const savedLimit = localStorage.getItem("limit");
+        const currentLimit = (savedLimit && Number(savedLimit) >= 6) ? Number(savedLimit) : 6;
+        if (limit) {
+            limit.value = String(currentLimit);
+        }
+
+        // Render data minimal 6 item ke halaman proyek
+        renderItems(inventaris.slice(0, currentLimit));
+
+        // Sinkronisasi otomatis parameter pencarian di URL (?q=)
+        const currentUrlParams = new URLSearchParams(window.location.search);
+        const queryParam = currentUrlParams.get("q");
+        if (queryParam && search) {
+            search.value = queryParam;
+            updateInventarisView(queryParam);
+        }
+
+        // Sinkronisasi otomatis parameter detail di URL (?detail=)
+        const detailParam = currentUrlParams.get("detail");
+        if (detailParam) {
+            const item = inventaris.find((data) => data.id === Number(detailParam));
+            if (item) {
+                tampilkanDetail(item);
+            }
+        }
+    } catch (error) {
+        console.error("Gagal memuat data inventaris:", error);
+        // Fallback cadangan jika koneksi terputus
+        inventaris = fallbackInventaris;
+        jalankanAnalisisConsole(inventaris);
+        renderItems(inventaris.slice(0, 6));
+
+        if (inventarisList && inventaris.length === 0) {
+            inventarisList.innerHTML = `
+                <div class="pesan-kosong" role="status">
+                    <div class="pesan-kosong-ikon">⚠️</div>
+                    <h3>Gagal Memuat Data</h3>
+                    <p>Terjadi kesalahan saat memuat data: ${error.message}</p>
+                </div>
+            `;
+        }
+    }
+}
+
+// Jalankan inisialisasi dashboard secara asinkron
+initDashboard();
 
 /* ==========================================================================
    Latihan Praktikum A: Accessible Equipment Loan Form Logic & Validation

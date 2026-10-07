@@ -67,6 +67,12 @@
   - Dokumentasi struktur HTTP (Method `GET`, URL, Status Code `200 OK`, `Content-Type: application/json`).
   - Pemetaan skema data response JSON dan identifikasi field yang dirender ke antarmuka kartu & dialog modal.
   - Prosedur inspeksi jaringan melalui browser Developer Tools (Tab Network & Response).
+- [x] **Fetch dan Render Data API ke Halaman Proyek (Pertemuan 7 — Latihan 2)**:
+  - Implementasi fungsi asinkron `fetchItems()` dan `initDashboard()` pada `js/app.js`.
+  - Penanganan response HTTP (`!response.ok throw new Error`) dan konversi payload ke format JSON.
+  - Render minimal 6 item inventaris ke antarmuka kartu grid (`renderItems`) dengan informasi lengkap (nama, kategori, stok, kondisi, lokasi).
+  - Integrasi terpadu dataset hasil fetch dengan fitur pencarian real-time, preferensi limit item, dan modal dialog detail.
+  - Penanganan error (*error handling & fallback state*) dengan pesan antarmuka informatif serta bebas galat di console.
 
 ---
 
@@ -200,6 +206,42 @@ Dipakai  : nama + kategori + kondisi untuk card; id + jumlah + lokasi untuk moda
    ```bash
    curl -i http://localhost/pemweb-obe/data/inventaris.json
    ```
+
+---
+
+## Pertemuan 7 — Latihan 2: Fetch dan Render
+
+### 1. Tujuan Praktikum
+Menampilkan data hasil konsumsi API/JSON secara asinkron ke antarmuka web proyek (bukan hanya dicetak di konsol browser), dengan memastikan antarmuka tetap interaktif, responsif, dan bebas error di konsol.
+
+### 2. Implementasi Fungsi Asinkron (`js/app.js`)
+
+Sesuai pola arsitektur kode pada materi slide:
+
+```javascript
+async function fetchItems() {
+  const response = await fetch('./data/inventaris.json');
+  if (!response.ok) throw new Error('Gagal ambil data');
+  return await response.json();
+}
+
+async function initDashboard() {
+  const items = await fetchItems();
+  renderItems(items);
+}
+
+initDashboard();
+```
+
+### 3. Pemenuhan Kriteria Output Minimal
+
+| Kriteria Praktikum | Status | Bukti Implementasi |
+|---|---|---|
+| **Minimal 6 item tampil** | ✅ Terpenuhi | Dataset `data/inventaris.json` memuat 10 item alat pesisir lengkap. Tampilan awal otomatis merender minimal 6–10 item. |
+| **Setiap item memiliki judul dan info penting** | ✅ Terpenuhi | Setiap kartu memuat: Judul Nama Alat, Badge Kategori, Badge Status Kondisi (*Baik / Perlu Servis / Rusak*), Jumlah Stok Unit, Lokasi Sentra, dan Tombol Detail. |
+| **UI tetap responsif** | ✅ Terpenuhi | Menggunakan tata letak responsif CSS Grid (`inventaris-grid`) dengan *content-driven media queries*, adaptif dari perangkat mobile hingga desktop tanpa *horizontal scroll*. |
+| **Tidak ada error di Console** | ✅ Terpenuhi | Seluruh pemanggilan fungsi berjalan aman dengan penanganan `try-catch`, validasi respons HTTP (`!response.ok`), dan modul JavaScript tervalidasi. |
+| **Commit setelah berhasil render** | ✅ Terpenuhi | Riwayat commit git mencatat implementasi fungsionalitas fetch dan render data inventaris. |
 
 ---
 
