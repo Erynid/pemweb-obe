@@ -1,4 +1,6 @@
 <?php
+
+$pdo = require_once __DIR__ . '/../config/database.php';
 // Header CORS dan JSON Response
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -14,38 +16,26 @@ $method = $_SERVER['REQUEST_METHOD'];
 // ==========================================
 // 1. HANDLER GET (Mengembalikan Array Alat)
 // ==========================================
-if ($method === 'GET') {
-    $dataAlat = [
-        [
-            "id" => 1,
-            "nama" => "Jaring Insang (Gillnet)",
-            "kategori" => "Alat Tangkap",
-            "jumlah" => 15,
-            "kondisi" => "Baik",
-            "lokasi" => "Dermaga Barat"
-        ],
-        [
-            "id" => 2,
-            "nama" => "GPS Navigasi Laut",
-            "kategori" => "Navigasi",
-            "jumlah" => 5,
-            "kondisi" => "Baik",
-            "lokasi" => "Pos Pengawas"
-        ],
-        [
-            "id" => 3,
-            "nama" => "Mesin Tempel 15 PK",
-            "kategori" => "Mesin Kapal",
-            "jumlah" => 3,
-            "kondisi" => "Perlu Servis",
-            "lokasi" => "Bengkel Sentral"
-        ]
-    ];
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Cek apakah ada query parameter 'kategori' di URL (?kategori=...)
+    $kategori = $_GET['kategori'] ?? null;
+
+    if ($kategori) {
+        // Query menggunakan prepared statement jika ada filter kategori
+        $stmt = $pdo->prepare("SELECT * FROM alats WHERE kategori = :kategori");
+        $stmt->execute([':kategori' => $kategori]);
+    } else {
+        // Query tanpa filter (ambil semua data)
+        $stmt = $pdo->prepare("SELECT * FROM alats");
+        $stmt->execute();
+    }
+
+    $alats = $stmt->fetchAll();
 
     http_response_code(200);
     echo json_encode([
-        "status" => "success",
-        "data" => $dataAlat
+        'status' => 'success',
+        'data' => $alats
     ]);
     exit;
 }
@@ -71,9 +61,10 @@ if ($method === 'POST') {
     $errors = [];
 
     // [Pengujian 3]: Validasi Aturan Bisnis (HTTP 422 Unprocessable Entity)
-    // - nama: wajib & minimal 3 karakter
-    if (empty($data['nama']) || strlen(trim($data['nama'])) < 3) {
-        $errors['nama'] = "Nama alat wajib diisi dan minimal 3 karakter.";
+    // - nama: wajib, minimal 3 karakter, & maksimal 100 karakter
+    $namaTrimmed = isset($data['nama']) ? trim($data['nama']) : '';
+    if (empty($namaTrimmed) || strlen($namaTrimmed) < 3 || strlen($namaTrimmed) > 100) {
+        $errors['nama'] = "Nama alat wajib diisi, minimal 3 karakter, dan maksimal 100 karakter.";
     }
 
     // - kategori: wajib
@@ -111,7 +102,7 @@ if ($method === 'POST') {
     // [Pengujian 1]: JSON Valid & Memenuhi Aturan (HTTP 201 Created)
     $newItem = [
         "id" => rand(100, 999),
-        "nama" => trim($data['nama']),
+        "nama" => $namaTrimmed,
         "kategori" => trim($data['kategori']),
         "jumlah" => (int) $data['jumlah'],
         "kondisi" => trim($data['kondisi']),
